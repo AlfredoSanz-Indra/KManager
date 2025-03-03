@@ -6,12 +6,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.view.page.section.*
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageGit {
+    private val logger = KotlinLogging.logger {}
 
     private val frontpageGitPullButtonsRow: FrontalesPageGitPullButtonsRow = FrontalesPageGitPullButtonsRow();
     private val frontpageGitChipRow: FrontalesPageGitChipsRow = FrontalesPageGitChipsRow()
@@ -21,7 +23,7 @@ class FrontalesPageGit {
 
     @Composable
     fun createPage( chipsSelected: MutableMap<String, Boolean>) {
-
+        logger.info { "creating view GIT" }
         var branchName by remember  { mutableStateOf("") }
 
         Spacer(Modifier.height(20.dp))

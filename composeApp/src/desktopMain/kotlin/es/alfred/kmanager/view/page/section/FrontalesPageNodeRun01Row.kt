@@ -12,13 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.di.UseCaseFactory
 import es.alfred.kmanager.domain.usecaseapi.AntUseCase
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageNodeRun01Row {
-
+    private val logger = KotlinLogging.logger {}
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable

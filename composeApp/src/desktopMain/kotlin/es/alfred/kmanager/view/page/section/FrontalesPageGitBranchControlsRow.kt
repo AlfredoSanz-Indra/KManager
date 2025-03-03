@@ -17,12 +17,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageGitBranchControlsRow {
+    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun gitControlsRow(onValueChange: (String) -> Unit) {

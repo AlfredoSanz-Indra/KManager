@@ -13,15 +13,15 @@ import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.di.UseCaseFactory
 import es.alfred.kmanager.domain.usecaseapi.AntUseCase
 import kotlinx.coroutines.*
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageGitPullButtonsRow {
-
+    private val logger = KotlinLogging.logger {}
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
-
 
     @Composable
     fun gitpullsButtonRow() {

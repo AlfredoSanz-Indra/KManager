@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import es.alfred.kmanager.core.Util
 import es.alfred.kmanager.core.model.Project
 import es.alfred.kmanager.core.resources.TheResources
+import mu.KotlinLogging
 
 
 /**
@@ -22,6 +23,7 @@ import es.alfred.kmanager.core.resources.TheResources
  * @time 2025
  */
 class FrontalesPageGitChipsRow {
+    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>) {

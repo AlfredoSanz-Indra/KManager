@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.Constants
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageMainButtons {
+    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun createPage(onViewChange: (Byte) -> Unit) {

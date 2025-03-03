@@ -2,6 +2,7 @@ package es.alfred.kmanager.data.ant
 
 import es.alfred.kmanager.domain.dataapi.AntCommands
 import es.alfred.kmanager.domain.model.AntResult
+import mu.KotlinLogging
 
 
 /**
@@ -9,6 +10,7 @@ import es.alfred.kmanager.domain.model.AntResult
  * @time 2025
  */
 class AntCommandsImpl : AntCommands {
+    private val logger = KotlinLogging.logger {}
 
     override fun execAntGitCheckout(antTaskName: String, destBranch: String, microID: String): AntResult {
 
@@ -99,10 +101,8 @@ class AntCommandsImpl : AntCommands {
     }
 
     override suspend fun execTest(input: String): AntResult {
-
             for (i in 1..1000000) {
                 println("$input : $i")
-
             }
         return AntResult("Test finished")
     }

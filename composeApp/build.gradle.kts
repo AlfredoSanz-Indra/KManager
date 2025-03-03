@@ -35,7 +35,8 @@ kotlin {
 
             //LOGGING
             implementation("org.slf4j:slf4j-api:2.0.17")
-
+            implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+            implementation("ch.qos.logback:logback-classic:1.5.17")
         }
     }
 }
@@ -48,7 +49,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "es.alfred.kmanager"
-            packageVersion = "1.0.1"
+            packageVersion = "1.0.2"
         }
     }
 }

@@ -23,13 +23,14 @@ import es.alfred.kmanager.domain.usecaseapi.AntUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageGitChipsActionButtonsRow {
-
+    private val logger = KotlinLogging.logger {}
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable
@@ -85,11 +86,11 @@ class FrontalesPageGitChipsActionButtonsRow {
     private fun validateOperation(chips: Map<String, Boolean>): Boolean {
         var result = true
         if (chips.isEmpty()) {
-            println("No hay proyecto seleccionado")
+            logger.info { "No hay proyecto seleccionado" }
             result = false
         }
         if (chips.size > 1) {
-            println("Solo se puede seleccionar un proyecto para esta funcion")
+            logger.info { "Solo se puede seleccionar un proyecto para esta funcion" }
             result = false
         }
         return result

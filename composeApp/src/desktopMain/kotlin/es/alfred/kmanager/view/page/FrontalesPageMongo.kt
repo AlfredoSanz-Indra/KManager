@@ -19,16 +19,18 @@ import es.alfred.kmanager.domain.usecaseapi.MongoOperations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageMongo {
+    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun createPage() {
-
+        logger.info { "creating view MONGO" }
         Spacer(Modifier.height(20.dp))
 
         Row(Modifier.background(color = Color.White).width(800.dp),

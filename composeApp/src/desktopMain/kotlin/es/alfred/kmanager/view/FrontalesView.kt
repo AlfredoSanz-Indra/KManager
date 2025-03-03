@@ -15,12 +15,14 @@ import es.alfred.kmanager.view.page.FrontalesPageGit
 import es.alfred.kmanager.view.page.FrontalesPageMongo
 import es.alfred.kmanager.view.page.FrontalesPageNode
 import es.alfred.kmanager.view.page.section.FrontalesPageMainButtons
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @date 2025
  */
-class FrontalesView: IView {
+class FrontalesView() : IView {
+    private val logger = KotlinLogging.logger {}
 
     private val frontPageMainButtonsRow: FrontalesPageMainButtons = FrontalesPageMainButtons()
     private val frontPageGit: FrontalesPageGit = FrontalesPageGit()
@@ -30,22 +32,29 @@ class FrontalesView: IView {
     var chipsGitSelected: MutableMap<String, Boolean> = mutableMapOf()
     var chipsNodeSelected: MutableMap<String, Boolean> = mutableMapOf()
 
-    constructor() {
+    init {
         initGlobal()
     }
 
     private fun initGlobal() {
-        TheResources.getProjects().projects
-            .forEach { it -> chipsGitSelected[it.task] = false }
+        logger.info { "initializing, loading data from resources" }
+        if(chipsGitSelected.isEmpty()) {
+            logger.info { "loading chipsGitSelected" }
+            TheResources.getProjects().projects
+                .forEach { it -> chipsGitSelected[it.task] = false }
+        }
 
-        TheResources.getProjects().projects
-            .filter { it -> it.runnable }
-            .forEach { it -> chipsNodeSelected[it.task] = false }
+        if(chipsNodeSelected.isEmpty()) {
+            logger.info { "loading chipsNodeSelected" }
+            TheResources.getProjects().projects
+                .filter { it -> it.runnable }
+                .forEach { it -> chipsNodeSelected[it.task] = false }
+        }
     }
 
     @Composable
     override fun createView() {
-
+        logger.info { "creating view Header with menu buttons" }
         var theview: Byte by remember { mutableStateOf(0) }
         var curView:Byte by remember { mutableStateOf(theview) }
 

@@ -15,12 +15,14 @@ import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.Util
 import es.alfred.kmanager.core.model.Project
 import es.alfred.kmanager.core.resources.TheResources
+import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageNodeChipsRow {
+    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun nodeChipsRow(chipsSelected: MutableMap<String, Boolean>) {
