@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20-RC"
 }
 
 kotlin {
@@ -25,9 +26,8 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.3")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.3")
             runtimeOnly("androidx.collection:collection:1.4.5")
-
 
             //MONGODB
             implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.3.0")
@@ -48,7 +48,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "es.alfred.kmanager"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1"
         }
     }
 }

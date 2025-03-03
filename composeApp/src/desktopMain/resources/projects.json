@@ -1,0 +1,10 @@
+{
+  "projects": [
+    {
+      "name": "crisis-backoffice-webapp-angular",
+      "label": "Crisis-backoffice",
+      "task": "crisis-backoffice",
+      "runnable": true
+    }
+  ]
+}
