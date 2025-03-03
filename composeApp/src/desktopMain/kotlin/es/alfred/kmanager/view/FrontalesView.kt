@@ -29,15 +29,10 @@ class FrontalesView() : IView {
     private val frontPageNode: FrontalesPageNode = FrontalesPageNode()
     private val frontPageMongo: FrontalesPageMongo = FrontalesPageMongo()
 
-    var chipsGitSelected: MutableMap<String, Boolean> = mutableMapOf()
-    var chipsNodeSelected: MutableMap<String, Boolean> = mutableMapOf()
-
-    init {
-        initGlobal()
-    }
-
-    private fun initGlobal() {
-        logger.info { "initializing, loading data from resources" }
+    @Composable
+    private fun initGlobal(chipsGitSelected: MutableMap<String, Boolean>,
+                           chipsNodeSelected: MutableMap<String, Boolean>) {
+        logger.info { "initGlobal, loading data from resources" }
         if(chipsGitSelected.isEmpty()) {
             logger.info { "loading chipsGitSelected" }
             TheResources.getProjects().projects
@@ -54,9 +49,13 @@ class FrontalesView() : IView {
 
     @Composable
     override fun createView() {
-        logger.info { "creating view Header with menu buttons" }
-        var theview: Byte by remember { mutableStateOf(0) }
-        var curView:Byte by remember { mutableStateOf(theview) }
+        logger.info { "creating Frontales View" }
+
+        var showview: Byte by remember { mutableStateOf(0) }
+        val chipsGitSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }
+        val chipsNodeSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }
+
+        this.initGlobal(chipsGitSelected, chipsNodeSelected)
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {
             Column {
@@ -67,23 +66,18 @@ class FrontalesView() : IView {
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    frontPageMainButtonsRow.createPage(onViewChange = {theview = it})
+                    frontPageMainButtonsRow.createPage(onViewChange = {showview = it})
                 }
 
-                if(curView != theview) {
-                    initGlobal()
-                    curView = theview
-                }
-
-                if (Constants.theviewGit == theview) {
+                if (Constants.theviewGit == showview) {
                     frontPageGit.createPage(chipsGitSelected)
                 }
 
-                if (Constants.theviewNode == theview) {
+                if (Constants.theviewNode == showview) {
                     frontPageNode.createPage(chipsNodeSelected)
                 }
 
-                if (Constants.theviewTests == theview) {
+                if (Constants.theviewTests == showview) {
                     frontPageMongo.createPage()
                 }
             }
