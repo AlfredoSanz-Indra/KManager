@@ -49,7 +49,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "es.alfred.kmanager"
-            packageVersion = "1.0.2"
+            packageVersion = "1.0.4"
         }
     }
 }

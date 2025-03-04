@@ -24,7 +24,9 @@ class FrontalesPageGit {
     @Composable
     fun createPage( chipsSelected: MutableMap<String, Boolean>) {
         logger.info { "creating view GIT" }
+
         var branchName by remember  { mutableStateOf("") }
+        val branches: MutableList<String> = remember { mutableStateListOf("feature/angular18", "feature/alertas") }
 
         Spacer(Modifier.height(20.dp))
         this.frontpageGitPullButtonsRow.gitpullsButtonRow()
@@ -36,9 +38,15 @@ class FrontalesPageGit {
         this.frontpageGitChipActionButtons.gitChipsActionsRow(chipsSelected)
 
         Spacer(Modifier.height(20.dp))
-        this.frontPageGitBranchControlsRow.gitControlsRow(onValueChange = {
-            branchName = it
-        })
+        this.frontPageGitBranchControlsRow.gitControlsRow(
+            branches,
+            onValueChange = {
+                branchName = it
+            },
+            onSelectChange = {
+                branchName = it
+            }
+        )
 
         Spacer(Modifier.height(20.dp))
         this.frontpageGitChipCheckoutsRow.gitChipsOperationsRow(chipsSelected, branchName)

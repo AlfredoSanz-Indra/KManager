@@ -1,19 +1,17 @@
 package es.alfred.kmanager.view.page.section
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -27,16 +25,94 @@ class FrontalesPageGitBranchControlsRow {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun gitControlsRow(onValueChange: (String) -> Unit) {
+    fun gitControlsRow(branchList: MutableList<String>,
+                       onValueChange: (String) -> Unit,
+                       onSelectChange: (String) -> Unit) {
+        var option: Int by remember { mutableStateOf(1) }
+
         Row(
             Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            gitControlsRowTexts(onValueChange)
+            getControlsRowRadioButton(onOptionSelect = { option = it })
         }
 
+        Row(
+            Modifier.background(color = Color.White).width(800.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.width(20.dp))
+            when(option) {
+                1 -> gitControlsRowTexts(onValueChange)
+                2 -> gitControlsRowSelect(branchList, onSelectChange)
+            }
+        }
+    }
+
+    @Composable
+    fun getControlsRowRadioButton(onOptionSelect: (Int) -> Unit) {
+        var rSelected: Int by remember { mutableStateOf(1) }
+
+        Row(
+            Modifier.width(200.dp)
+                .height(56.dp)
+                .selectable(
+                    selected = rSelected == 1,
+                    onClick = {
+                        rSelected = 1
+                        onOptionSelect(1)
+                    },
+                    role = Role.RadioButton
+                )
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = rSelected == 1,
+                onClick = {
+                    rSelected = 1
+                    onOptionSelect(1)
+                }
+            )
+            Text(
+                text = "New Branch",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+
+        Spacer(Modifier.width(20.dp))
+
+        Row(
+            Modifier.width(250.dp)
+                .height(56.dp)
+                .selectable(
+                    selected = rSelected == 2,
+                    onClick = {
+                                rSelected = 2
+                                onOptionSelect(2)
+                              },
+                    role = Role.RadioButton
+                )
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = rSelected == 2,
+                onClick = {
+                    rSelected = 2
+                    onOptionSelect(2)
+                }
+            )
+            Text(
+                text = "Existing Branch",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
     }
 
     @Composable
@@ -72,5 +148,79 @@ class FrontalesPageGitBranchControlsRow {
                 disabledPlaceholderColor = Color.LightGray,
             )
         )
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun gitControlsRowSelect(branches: MutableList<String>, onSelectChange: (String) -> Unit) {
+        var isExpanded by remember { mutableStateOf(false) }
+        var selectedBranch by remember { mutableStateOf( "" ) }
+
+        ExposedDropdownMenuBox(
+            expanded = isExpanded,
+            onExpandedChange = { newValue ->
+                isExpanded = newValue
+            },
+        ) {
+            OutlinedTextField(
+                value = selectedBranch,
+                modifier = Modifier.height(90.dp).fillMaxSize(1f).padding(10.dp),
+                onValueChange = {
+                },
+                label = { Text(text = "Branches") },
+                placeholder = { Text("Select branch") },
+                singleLine = true,
+                maxLines = 1,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    disabledTextColor = Color.Gray,
+                    errorTextColor = Color.Red,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.Gray,
+                    errorContainerColor = Color.Yellow,
+                    cursorColor = Color.Black,
+                    unfocusedLabelColor = Color.Black,
+                    focusedLabelColor = Color.Black,
+                    focusedPlaceholderColor = Color.LightGray,
+                    disabledPlaceholderColor = Color.LightGray,
+                ),
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = isExpanded,
+                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable),
+                    )
+                },
+                interactionSource = remember { MutableInteractionSource() }
+                    .also { interactionSource ->
+                        LaunchedEffect(interactionSource) {
+                            interactionSource.interactions.collect {
+                                if (it is PressInteraction.Release) {
+                                    isExpanded = !isExpanded
+                                }
+                            }
+                        }
+                    }
+            )
+
+            ExposedDropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = { isExpanded = false },
+            ) {
+                val listBranches: MutableList<String> = branches
+                listBranches.forEach {
+                    DropdownMenuItem(
+                        text = { Text(it, style = MaterialTheme.typography.bodyLarge) },
+                        onClick = {
+                            isExpanded = false
+                            selectedBranch = it
+                            onSelectChange(it)
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
     }
 }
