@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <property name="LOG_DIR" value="D:/APPS/KManager/msi/logs" />
+    <property name="LOG_DIR" value="D:/APPS/logs" />
     <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/KManager.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -21,7 +21,7 @@
     </appender>
 
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="ROLLING-FILE" />
     </root>

@@ -47,9 +47,10 @@ compose.desktop {
         mainClass = "es.alfred.kmanager.MainKt"
 
         nativeDistributions {
+            includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "es.alfred.kmanager"
-            packageVersion = "1.0.5"
+            packageVersion = "1.0.6"
         }
     }
 }
