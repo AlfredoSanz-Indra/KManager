@@ -49,8 +49,6 @@ class FrontalesView() : IView {
 
     @Composable
     override fun createView() {
-        logger.info { "creating Frontales View" }
-
         var showview: Byte by remember { mutableStateOf(0) }
         val chipsGitSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }
         val chipsNodeSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }

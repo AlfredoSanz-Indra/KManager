@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.di.UseCaseFactory
 import es.alfred.kmanager.domain.usecaseapi.AntUseCase
+import es.alfred.kmanager.domain.usecaseapi.OperationsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -31,37 +32,45 @@ import mu.KotlinLogging
  */
 class FrontalesPageGitChipsOperationsRow {
     private val logger = KotlinLogging.logger {}
-    private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable
-    fun gitChipsOperationsRow(chipsSelected: MutableMap<String, Boolean>, branchName: String) {
+    fun gitChipsOperationsRow(chipsSelected: MutableMap<String, Boolean>,
+                              branchName: String,
+                              onBranchesUpdate: (Boolean) -> Unit) {
         Row(
             Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            gitOperationsActionButtons(chipsSelected, branchName)
+            gitOperationsActionButtons(chipsSelected, branchName, onBranchesUpdate)
         }
 
     }
 
     @Composable
-    fun gitOperationsActionButtons(chipsSelected: MutableMap<String, Boolean>, branchName: String) {
+    fun gitOperationsActionButtons(chipsSelected: MutableMap<String, Boolean>,
+                                   branchName: String,
+                                   onBranchesUpdate: (Boolean) -> Unit) {
         var lastText = ""
         if(branchName.isNotBlank() && branchName.length > 10) {
             lastText = branchName.trim().substring (branchName.length-9)
         }
         
-        gitOperationsActionCheckoutButton(chipsSelected, branchName, lastText)
+        gitOperationsActionCheckoutButton(chipsSelected, branchName, lastText, onBranchesUpdate)
         Spacer(Modifier.width(20.dp))
-        
-        gitOperationsActionPushButton(chipsSelected, branchName, lastText)
+        gitOperationsActionPushButton(chipsSelected, branchName, lastText, onBranchesUpdate)
     }
 
     @Composable
-    fun gitOperationsActionCheckoutButton(chipsSelected: MutableMap<String, Boolean>, branchName: String, lastText: String = "") {
+    fun gitOperationsActionCheckoutButton(chipsSelected: MutableMap<String, Boolean>,
+                                          branchName: String,
+                                          lastText: String = "",
+                                          onBranchesUpdate: (Boolean) -> Unit) {
+        val operationsUseCase: OperationsUseCase = UseCaseFactory.getOperationsUseCase()
+        val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
         val coroutineScope = rememberCoroutineScope()
+
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)
@@ -75,7 +84,7 @@ class FrontalesPageGitChipsOperationsRow {
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 val chips = chipsSelected.filter { it -> it.value }
@@ -86,8 +95,11 @@ class FrontalesPageGitChipsOperationsRow {
                         val defer = async(Dispatchers.IO) {
                             val chipsSelectedList = chips.keys.toList()
                             antUseCase.gitCheckout(chipsSelectedList, branchName)
+
+                            operationsUseCase.addBranch(chipsSelectedList[0], branchName)
                         }
                         defer.await()
+                        onBranchesUpdate(true)
                     }
                 }
             }
@@ -98,8 +110,14 @@ class FrontalesPageGitChipsOperationsRow {
     }
 
     @Composable
-    fun gitOperationsActionPushButton(chipsSelected: MutableMap<String, Boolean>, branchName: String, lastText: String = "") {
+    fun gitOperationsActionPushButton(chipsSelected: MutableMap<String, Boolean>,
+                                      branchName: String,
+                                      lastText: String = "",
+                                      onBranchesUpdate: (Boolean) -> Unit) {
+        val operationsUseCase: OperationsUseCase = UseCaseFactory.getOperationsUseCase()
+        val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
         val coroutineScope = rememberCoroutineScope()
+
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)
@@ -113,7 +131,7 @@ class FrontalesPageGitChipsOperationsRow {
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 val chips = chipsSelected.filter { it -> it.value }
@@ -123,8 +141,12 @@ class FrontalesPageGitChipsOperationsRow {
                     coroutineScope.launch {
                         val defer = async(Dispatchers.IO) {
                             antUseCase.gitPush(branchName)
+
+                            val chipsSelectedList = chips.keys.toList()
+                            operationsUseCase.addBranch(chipsSelectedList[0], branchName)
                         }
                         defer.await()
+                        onBranchesUpdate(true)
                     }
                 }
             }

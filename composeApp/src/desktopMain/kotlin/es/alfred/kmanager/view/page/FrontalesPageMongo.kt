@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.di.UseCaseFactory
 import es.alfred.kmanager.domain.usecaseapi.AntUseCase
-import es.alfred.kmanager.domain.usecaseapi.MongoOperations
+import es.alfred.kmanager.domain.usecaseapi.OperationsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -53,7 +53,7 @@ class FrontalesPageMongo {
     @Composable
     private fun row01() {
         val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
-        val mongoOperations: MongoOperations = UseCaseFactory.getMongoOperations()
+        val operationsUseCase: OperationsUseCase = UseCaseFactory.getOperationsUseCase()
 
         var mongoIsAlive by remember { mutableStateOf(TextFieldValue("Undetermined")) }
 
@@ -100,7 +100,7 @@ class FrontalesPageMongo {
                 coroutineScope.launch {
                     val defer = async(Dispatchers.IO) {
                         mongoIsAlive = TextFieldValue("Checking ...")
-                        val resp = mongoOperations.isAlive()
+                        val resp = operationsUseCase.isAlive()
 
                         return@async resp
                     }

@@ -1,9 +1,9 @@
 package es.alfred.kmanager.core.di
 
 import es.alfred.kmanager.domain.usecase.AntUseCaseImpl
-import es.alfred.kmanager.domain.usecase.MongoOperationsImpl
+import es.alfred.kmanager.domain.usecase.OperationsUseCaseImpl
 import es.alfred.kmanager.domain.usecaseapi.AntUseCase
-import es.alfred.kmanager.domain.usecaseapi.MongoOperations
+import es.alfred.kmanager.domain.usecaseapi.OperationsUseCase
 
 /**
  * @author Alfredo Sanz
@@ -12,7 +12,7 @@ import es.alfred.kmanager.domain.usecaseapi.MongoOperations
 object UseCaseFactory {
 
     private lateinit var antUseCase: AntUseCase
-    private lateinit var mongoOperations: MongoOperations
+    private lateinit var operationsUseCase: OperationsUseCase
 
     fun getAntUseCase(): AntUseCase {
         if (!this::antUseCase.isInitialized) {
@@ -21,10 +21,10 @@ object UseCaseFactory {
         return this.antUseCase
     }
 
-    fun getMongoOperations(): MongoOperations {
-        if (!this::mongoOperations.isInitialized) {
-            this.mongoOperations = MongoOperationsImpl()
+    fun getOperationsUseCase(): OperationsUseCase {
+        if (!this::operationsUseCase.isInitialized) {
+            this.operationsUseCase = OperationsUseCaseImpl()
         }
-        return this.mongoOperations
+        return this.operationsUseCase
     }
 }

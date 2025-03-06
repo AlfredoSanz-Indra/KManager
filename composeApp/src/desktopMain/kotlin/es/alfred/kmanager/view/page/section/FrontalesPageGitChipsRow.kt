@@ -26,7 +26,7 @@ class FrontalesPageGitChipsRow {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>) {
+    fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
 
         val items: List<Any> = TheResources.getProjects().projects
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
@@ -40,7 +40,7 @@ class FrontalesPageGitChipsRow {
                 Spacer(Modifier.width(20.dp))
 
                 for(item in group) {
-                    gitChip(item as Project, chipsSelected)
+                    gitChip(item as Project, chipsSelected, onChipSelected)
                 }
             }//row
         }//for
@@ -48,7 +48,7 @@ class FrontalesPageGitChipsRow {
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
     @Composable
-    private fun gitChip(item: Project, chipsSelected: MutableMap<String, Boolean>) {
+    private fun gitChip(item: Project, chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
 
         var selected by remember { mutableStateOf(false) }
 
@@ -57,6 +57,7 @@ class FrontalesPageGitChipsRow {
             onClick = {
                 selected = !selected
                 chipsSelected[item.task] = selected
+                onChipSelected(true)
             },
             label = { Text(item.label) },
             modifier = Modifier,

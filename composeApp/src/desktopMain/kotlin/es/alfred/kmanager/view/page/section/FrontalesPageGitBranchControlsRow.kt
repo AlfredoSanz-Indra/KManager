@@ -25,7 +25,7 @@ class FrontalesPageGitBranchControlsRow {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun gitControlsRow(branchList: MutableList<String>,
+    fun gitControlsRow(branchList:List<String>,
                        onValueChange: (String) -> Unit,
                        onSelectChange: (String) -> Unit) {
         var option: Int by remember { mutableStateOf(1) }
@@ -108,7 +108,7 @@ class FrontalesPageGitBranchControlsRow {
                 }
             )
             Text(
-                text = "Existing Branch",
+                text = "Select Branch",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 16.dp)
             )
@@ -117,7 +117,6 @@ class FrontalesPageGitBranchControlsRow {
 
     @Composable
     fun gitControlsRowTexts(onValueChange: (String) -> Unit) {
-
         var txBranchName by rememberSaveable { mutableStateOf(TextFieldValue("", TextRange(5, 70))) }
 
         OutlinedTextField(
@@ -152,7 +151,7 @@ class FrontalesPageGitBranchControlsRow {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun gitControlsRowSelect(branches: MutableList<String>, onSelectChange: (String) -> Unit) {
+    fun gitControlsRowSelect(branches: List<String>, onSelectChange: (String) -> Unit) {
         var isExpanded by remember { mutableStateOf(false) }
         var selectedBranch by remember { mutableStateOf( "" ) }
 
@@ -208,7 +207,7 @@ class FrontalesPageGitBranchControlsRow {
                 expanded = isExpanded,
                 onDismissRequest = { isExpanded = false },
             ) {
-                val listBranches: MutableList<String> = branches
+                val listBranches: List<String> = branches
                 listBranches.forEach {
                     DropdownMenuItem(
                         text = { Text(it, style = MaterialTheme.typography.bodyLarge) },
