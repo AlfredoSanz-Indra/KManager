@@ -1,6 +1,6 @@
 package es.alfred.kmanager.core.resources
 
-import es.alfred.kmanager.core.model.Projects
+import es.alfred.kmanager.core.model.Resources
 
 
 /**
@@ -9,12 +9,12 @@ import es.alfred.kmanager.core.model.Projects
  */
 object TheResources {
 
-    private lateinit var projects: Projects
+    private lateinit var resources: Resources
 
-    fun getProjects(): Projects {
-        if (!this::projects.isInitialized) {
-            this.projects = readJsonResources_projects("projects.json")
+    fun getResources(): Resources {
+        if (!this::resources.isInitialized) {
+            this.resources = readJsonResources_resources("resources.json")
         }
-        return this.projects
+        return this.resources
     }
 }

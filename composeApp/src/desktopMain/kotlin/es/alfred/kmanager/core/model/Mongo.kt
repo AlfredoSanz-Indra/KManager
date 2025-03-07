@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
  * @time 2025
  */
 @Serializable
-data class Projects(@Serializable() val projects: List<Project> )
+data class Mongo(val connection: String,
+                 val database: String,)

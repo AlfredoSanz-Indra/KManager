@@ -4,6 +4,7 @@ import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import es.alfred.kmanager.core.db.mongo.MongoConn
+import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.data.mongo.entity.Branches
 import es.alfred.kmanager.data.mongo.entity.BranchesResult
 import es.alfred.kmanager.data.mongo.entity.ServerAlive
@@ -26,7 +27,7 @@ class MongoDAOImpl : MongoDAO {
 
         try {
             val mongoClient = MongoConn.getClient()
-            val database = mongoClient.getDatabase("kmanagerDB")
+            val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
 
             val command = Document("ping", BsonInt64(1))
             database.runCommand(command)
@@ -46,7 +47,7 @@ class MongoDAOImpl : MongoDAO {
 
         try {
             val mongoClient = MongoConn.getClient()
-            val database = mongoClient.getDatabase("kmanagerDB")
+            val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
             val collection = database.getCollection<Document>("branches")
 
             val document = Document("_id", ObjectId())
@@ -70,7 +71,7 @@ class MongoDAOImpl : MongoDAO {
 
         try {
             val mongoClient = MongoConn.getClient()
-            val database = mongoClient.getDatabase("kmanagerDB")
+            val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
             val collection = database.getCollection<Document>("branches")
 
             val updateParams = Updates.set("branches", branchList)
@@ -94,7 +95,7 @@ class MongoDAOImpl : MongoDAO {
 
         try {
             val mongoClient = MongoConn.getClient()
-            val database = mongoClient.getDatabase("kmanagerDB")
+            val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
             val collection = database.getCollection<Branches>(collectionName = "branches")
 
             collection.find<Branches>().limit(1).collect {

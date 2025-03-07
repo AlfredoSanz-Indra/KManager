@@ -35,13 +35,13 @@ class FrontalesView() : IView {
         logger.info { "initGlobal, loading data from resources" }
         if(chipsGitSelected.isEmpty()) {
             logger.info { "loading chipsGitSelected" }
-            TheResources.getProjects().projects
+            TheResources.getResources().projects
                 .forEach { it -> chipsGitSelected[it.task] = false }
         }
 
         if(chipsNodeSelected.isEmpty()) {
             logger.info { "loading chipsNodeSelected" }
-            TheResources.getProjects().projects
+            TheResources.getResources().projects
                 .filter { it -> it.runnable }
                 .forEach { it -> chipsNodeSelected[it.task] = false }
         }

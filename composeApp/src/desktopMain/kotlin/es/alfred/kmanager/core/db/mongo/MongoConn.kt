@@ -3,6 +3,7 @@ package es.alfred.kmanager.core.db.mongo
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
+import es.alfred.kmanager.core.resources.TheResources
 import java.util.concurrent.TimeUnit
 
 /**
@@ -17,7 +18,7 @@ object MongoConn {
         if (!this::mongoClient.isInitialized) {
              mongoClient = MongoClient.create(
                 MongoClientSettings.builder()
-                    .applyConnectionString(ConnectionString("mongodb://localhost:27017"))
+                    .applyConnectionString(ConnectionString(TheResources.getResources().mongo.connection))
                     .applyToConnectionPoolSettings{ builder ->
                         builder
                             .maxWaitTime(5, TimeUnit.SECONDS)

@@ -1,6 +1,6 @@
 package es.alfred.kmanager.core.resources
 
-import es.alfred.kmanager.core.model.Projects
+import es.alfred.kmanager.core.model.Resources
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -15,12 +15,12 @@ import java.nio.file.Paths
  */
 
 @OptIn(ExperimentalSerializationApi::class)
-fun readJsonResources_projects(fileName: String): Projects {
+fun readJsonResources_resources(fileName: String): Resources {
     val logger = KotlinLogging.logger {}
     val path = Paths.get("").toAbsolutePath().toString()
     logger.info { "readJsonResources_projects -> path: $path, fileName: $fileName" }
 
     val input: InputStream = File(fileName).inputStream()
-    val result = Json.decodeFromStream<Projects>(input)
+    val result = Json.decodeFromStream<Resources>(input)
     return result
 }

@@ -2,20 +2,18 @@ package es.alfred.kmanager.view.page.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import es.alfred.kmanager.core.Util
 import es.alfred.kmanager.core.model.Project
 import es.alfred.kmanager.core.resources.TheResources
-import mu.KotlinLogging
 
 
 /**
@@ -23,12 +21,11 @@ import mu.KotlinLogging
  * @time 2025
  */
 class FrontalesPageGitChipsRow {
-    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
 
-        val items: List<Any> = TheResources.getProjects().projects
+        val items: List<Any> = TheResources.getResources().projects
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 
         for(group in itemsGroup) {
