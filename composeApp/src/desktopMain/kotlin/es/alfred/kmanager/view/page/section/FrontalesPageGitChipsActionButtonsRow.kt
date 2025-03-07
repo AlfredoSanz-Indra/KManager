@@ -89,10 +89,7 @@ class FrontalesPageGitChipsActionButtonsRow {
             logger.info { "No hay proyecto seleccionado" }
             result = false
         }
-        if (chips.size > 1) {
-            logger.info { "Solo se puede seleccionar un proyecto para esta funcion" }
-            result = false
-        }
+
         return result
     }
 }

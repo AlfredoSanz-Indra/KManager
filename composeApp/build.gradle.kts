@@ -50,7 +50,7 @@ compose.desktop {
             includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "es.alfred.kmanager"
-            packageVersion = "1.0.6"
+            packageVersion = "1.0.7"
         }
     }
 }

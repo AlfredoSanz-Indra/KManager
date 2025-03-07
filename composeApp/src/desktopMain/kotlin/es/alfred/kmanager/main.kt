@@ -22,7 +22,7 @@ const val actionFrontales: String = "FRONTALES"
 @Composable
 private fun app(action: String) {
 
-    var v: IView
+    val v: IView
 
     when(action) {
         actionFrontales -> {
@@ -36,7 +36,7 @@ fun main() = application {
     var action by remember { mutableStateOf(actionFrontales) }
 
     Window(onCloseRequest = ::exitApplication,
-        title = "KManager 1.0.6",
+        title = "KManager 1.0.7",
         state = rememberWindowState(width = 850.dp, height = 710.dp)
     ) {
         MenuBar {
