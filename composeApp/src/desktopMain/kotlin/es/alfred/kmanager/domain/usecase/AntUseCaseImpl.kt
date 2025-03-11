@@ -14,11 +14,14 @@ class AntUseCaseImpl: AntUseCase {
     private val logger = KotlinLogging.logger {}
     private val antCommand: AntCommands = DataFactory.getAntCommands()
 
-    override suspend fun gitCheckout(microFs: List<String>, destBranch: String) {
-        microFs.forEach { it ->
-            val r: AntResult = this.antCommand.execAntGitCheckout("git-checkout", destBranch, it)
-            logger.info { "\"AntCommand - gitCheckout  result=${r.result}" }
-        }
+    override suspend fun gitCheckout(microF: String, destBranch: String) {
+        val r: AntResult = this.antCommand.execAntGitCheckout("git-checkout", destBranch, microF)
+        logger.info { "\"AntCommand - gitCheckout  result=${r.result}" }
+    }
+
+    override suspend fun gitPush(microF: String, destBranch: String) {
+        var r: AntResult = this.antCommand.execAntGitCommandSmartPush("git-push", microF, destBranch)
+        logger.info { "\"AntCommand - git-push $destBranch - result=${r.result}" }
     }
 
     override suspend fun gitPullAll() {
@@ -50,11 +53,6 @@ class AntUseCaseImpl: AntUseCase {
             logger.info { "\"AntCommand - nodeRun - result=${r.result}" }
         }
         logger.info { "\"executed Node Run for microFrontales ($microFs)" }
-    }
-
-    override suspend fun gitPush(destBranch: String) {
-        var r: AntResult = this.antCommand.execAntGitCommandSmartPush(destBranch)
-        logger.info { "\"AntCommand - git-push $destBranch - result=${r.result}" }
     }
 
     override suspend fun nodeRunTestMicroF(microF: String) {

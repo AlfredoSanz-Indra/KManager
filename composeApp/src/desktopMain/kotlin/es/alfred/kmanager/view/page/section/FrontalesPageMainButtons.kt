@@ -58,7 +58,7 @@ class FrontalesPageMainButtons {
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 onViewChoose(Constants.theviewGit)
@@ -83,7 +83,7 @@ class FrontalesPageMainButtons {
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 onViewChoose(Constants.theviewNode)
@@ -107,7 +107,7 @@ class FrontalesPageMainButtons {
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 onViewChoose(Constants.theviewTests)

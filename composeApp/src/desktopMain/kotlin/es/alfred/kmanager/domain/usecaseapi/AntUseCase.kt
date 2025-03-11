@@ -8,15 +8,15 @@ import es.alfred.kmanager.domain.model.AntResult
  */
 interface AntUseCase {
 
-    suspend fun gitCheckout(microFs: List<String>, destBranch: String)
+    suspend fun gitCheckout(microF: String, destBranch: String)
+
+    suspend fun gitPush(microF: String, destBranch: String)
 
     suspend fun gitPullAll();
 
     suspend fun gitBranch();
 
     suspend fun gitPullList(microFs: List<String>);
-
-    suspend fun gitPush(destBranch: String)
 
     suspend fun nodeRunMicroF(microF: String)
 

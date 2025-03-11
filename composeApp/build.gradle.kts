@@ -49,8 +49,8 @@ compose.desktop {
         nativeDistributions {
             includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "es.alfred.kmanager"
-            packageVersion = "1.0.8"
+            packageName = "KManager"
+            packageVersion = "1.0.9"
         }
     }
 }

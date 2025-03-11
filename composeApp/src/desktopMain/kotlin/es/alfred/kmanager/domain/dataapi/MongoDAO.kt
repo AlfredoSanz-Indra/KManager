@@ -12,9 +12,5 @@ interface MongoDAO {
 
     suspend fun checkServerIsAlive(): ServerAlive
 
-    suspend fun addBranch(project: String, branchList: List<String>): InsertResult
 
-    suspend fun updateBranches(project: String, branchList: List<String>): InsertResult
-
-    suspend fun getBranches(project: String): BranchesResult
 }
