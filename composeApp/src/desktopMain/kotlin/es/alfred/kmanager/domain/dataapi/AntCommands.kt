@@ -15,7 +15,7 @@ interface AntCommands {
 
     fun execAntGitCommand(antTaskName: String): AntResult;
 
-    fun execAntGitCommandSmartPush(destBranch: String): AntResult
+    fun execAntGitCommandSmartPush(antTaskName: String, microID: String, destBranch: String): AntResult
 
     fun execAntNodeCommandsSmart(antTaskName: String,  microID: String): AntResult
 

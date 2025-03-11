@@ -14,6 +14,7 @@ import mu.KotlinLogging
 class OperationsUseCaseImpl : OperationsUseCase {
     private val logger = KotlinLogging.logger {}
     private val mongoDAO = DataFactory.getMongoDAO()
+    private val branchesDAO = DataFactory.getBranchesDAO()
 
     override suspend fun isAlive(): BooleanResult {
         var result: BooleanResult
@@ -31,11 +32,11 @@ class OperationsUseCaseImpl : OperationsUseCase {
     }
 
     override suspend fun addBranch(project: String, branchName: String): ListResult {
+        logger.info { "addBranch -> project: $project, branchName: $branchName" }
         val result = ListResult(listOf(), false)
 
         try {
-            val branchesResult = this.mongoDAO.getBranches(project)
-
+            val branchesResult = this.branchesDAO.getBranches(project)
             if(branchesResult.result &&
                branchesResult.branches.isNotEmpty() &&
                branchesResult.branches.contains(branchName) &&
@@ -60,8 +61,8 @@ class OperationsUseCaseImpl : OperationsUseCase {
                 }
 
                 val resp = when(doInsert) {
-                    true  -> this.mongoDAO.addBranch(project, branches)
-                    false -> this.mongoDAO.updateBranches(project, branches)
+                    true  -> this.branchesDAO.addBranch(project, branches)
+                    false -> this.branchesDAO.updateBranches(project, branches)
                 }
 
                 if(resp.result) {
@@ -75,15 +76,16 @@ class OperationsUseCaseImpl : OperationsUseCase {
             result.result = false
         }
 
-        logger.info { "addBranch -> result: $result" }
+        logger.info { "addBranch -> result.data: ${result.data}" }
         return result
     }
 
     override suspend fun getBranches(project: String): ListResult {
+        logger.info { "getBranches -> project: $project" }
         val result = ListResult(listOf(), true)
 
         try {
-            val branchesResult = this.mongoDAO.getBranches(project)
+            val branchesResult = this.branchesDAO.getBranches(project)
 
             if(branchesResult.result && branchesResult.branches.isNotEmpty()) {
                 result.data = branchesResult.branches
@@ -94,7 +96,7 @@ class OperationsUseCaseImpl : OperationsUseCase {
             result.result = false
         }
 
-        logger.info { "getBranches -> result: $result" }
+        logger.info { "getBranches -> result.data: ${result.data}" }
         return result
     }
 }

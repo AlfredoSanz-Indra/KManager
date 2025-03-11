@@ -94,7 +94,7 @@ class FrontalesPageGitChipsOperationsRow {
                     coroutineScope.launch {
                         val defer = async(Dispatchers.IO) {
                             val chipsSelectedList = chips.keys.toList()
-                            antUseCase.gitCheckout(chipsSelectedList, branchName)
+                            antUseCase.gitCheckout(chipsSelectedList[0], branchName)
 
                             operationsUseCase.addBranch(chipsSelectedList[0], branchName)
                         }
@@ -140,9 +140,9 @@ class FrontalesPageGitChipsOperationsRow {
                 if(canGoon) {
                     coroutineScope.launch {
                         val defer = async(Dispatchers.IO) {
-                            antUseCase.gitPush(branchName)
-
                             val chipsSelectedList = chips.keys.toList()
+                            antUseCase.gitPush(chipsSelectedList[0], branchName)
+
                             operationsUseCase.addBranch(chipsSelectedList[0], branchName)
                         }
                         defer.await()
