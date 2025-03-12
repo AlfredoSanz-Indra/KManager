@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.dp
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageGitBranchControlsRow {
+class FrontalesPageGitChipsBranchesRow {
 
     @Composable
-    fun gitControlsRow(branchList:List<String>,
-                       onValueChange: (String) -> Unit,
-                       onSelectChange: (String) -> Unit) {
+    fun showRow(branchList:List<String>,
+                onValueChange: (String) -> Unit,
+                onSelectChange: (String) -> Unit) {
         var option: Int by remember { mutableStateOf(1) }
 
         Row(
@@ -34,7 +34,7 @@ class FrontalesPageGitBranchControlsRow {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            getControlsRowRadioButton(onOptionSelect = { option = it })
+            gitRadioButton(onOptionSelect = { option = it })
         }
 
         Row(
@@ -44,14 +44,14 @@ class FrontalesPageGitBranchControlsRow {
         ) {
             Spacer(Modifier.width(20.dp))
             when(option) {
-                1 -> gitControlsRowTexts(onValueChange)
-                2 -> gitControlsRowSelect(branchList, onSelectChange)
+                1 -> gitBranchText(onValueChange)
+                2 -> gitBranchSelect(branchList, onSelectChange)
             }
         }
     }
 
     @Composable
-    fun getControlsRowRadioButton(onOptionSelect: (Int) -> Unit) {
+    fun gitRadioButton(onOptionSelect: (Int) -> Unit) {
         var rSelected: Int by remember { mutableStateOf(1) }
 
         Row(
@@ -114,7 +114,7 @@ class FrontalesPageGitBranchControlsRow {
     }
 
     @Composable
-    fun gitControlsRowTexts(onValueChange: (String) -> Unit) {
+    fun gitBranchText(onValueChange: (String) -> Unit) {
         var txBranchName by rememberSaveable { mutableStateOf(TextFieldValue("", TextRange(5, 70))) }
 
         OutlinedTextField(
@@ -149,7 +149,7 @@ class FrontalesPageGitBranchControlsRow {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun gitControlsRowSelect(branches: List<String>, onSelectChange: (String) -> Unit) {
+    fun gitBranchSelect(branches: List<String>, onSelectChange: (String) -> Unit) {
         var isExpanded by remember { mutableStateOf(false) }
         var selectedBranch by remember { mutableStateOf( "" ) }
 

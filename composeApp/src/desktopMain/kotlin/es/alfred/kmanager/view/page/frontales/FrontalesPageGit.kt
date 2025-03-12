@@ -22,11 +22,11 @@ import mu.KotlinLogging
 class FrontalesPageGit {
     private val logger = KotlinLogging.logger {}
 
-    private val frontpageGitPullButtonsRow: FrontalesPageGitPullButtonsRow = FrontalesPageGitPullButtonsRow()
-    private val frontpageGitChipRow: FrontalesPageGitChipsRow = FrontalesPageGitChipsRow()
-    private val frontpageGitChipActionButtons: FrontalesPageGitChipsActionButtonsRow = FrontalesPageGitChipsActionButtonsRow()
-    private val frontpageGitChipCheckoutsRow: FrontalesPageGitChipsOperationsRow = FrontalesPageGitChipsOperationsRow()
-    private val frontPageGitBranchControlsRow: FrontalesPageGitBranchControlsRow = FrontalesPageGitBranchControlsRow()
+    private val frontpageGitUpperRow: FrontalesPageGitUpperRow = FrontalesPageGitUpperRow()
+    private val frontpageGitChipsRow: FrontalesPageGitChipsRow = FrontalesPageGitChipsRow()
+    private val frontpageGitChipsButtonsRow: FrontalesPageGitChipsButtonsRow = FrontalesPageGitChipsButtonsRow()
+    private val frontPageGitBranchControlsRow: FrontalesPageGitChipsBranchesRow = FrontalesPageGitChipsBranchesRow()
+    private val frontpageGitChipCheckoutsRow: FrontalesPageGitChipsBranchesButtonsRow = FrontalesPageGitChipsBranchesButtonsRow()
 
     @Composable
     fun createPage() {
@@ -55,19 +55,19 @@ class FrontalesPageGit {
         }
 
         Spacer(Modifier.height(20.dp))
-        this.frontpageGitPullButtonsRow.gitpullsButtonRow()
+        this.frontpageGitUpperRow.showRow()
 
         Spacer(Modifier.height(20.dp))
-        this.frontpageGitChipRow.gitChipsRow(chipsSelected,
+        this.frontpageGitChipsRow.showRow(chipsSelected,
                                              onChipSelected = {
                                                  flagChipSelected = true
                                              })
 
         Spacer(Modifier.height(20.dp))
-        this.frontpageGitChipActionButtons.gitChipsActionsRow(chipsSelected)
+        this.frontpageGitChipsButtonsRow.showRow(chipsSelected)
 
         Spacer(Modifier.height(20.dp))
-        this.frontPageGitBranchControlsRow.gitControlsRow(branches,
+        this.frontPageGitBranchControlsRow.showRow(branches,
                                                           onValueChange = {
                                                               branchName = it
                                                           },
@@ -76,7 +76,7 @@ class FrontalesPageGit {
                                                           })
 
         Spacer(Modifier.height(20.dp))
-        this.frontpageGitChipCheckoutsRow.gitChipsOperationsRow(chipsSelected,
+        this.frontpageGitChipCheckoutsRow.showRow(chipsSelected,
                                                                 branchName,
                                                                 onBranchesUpdate = {
                                                                     flagUpdatedBranchList = true

@@ -8,16 +8,16 @@ import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.view.page.frontales.section.FrontalesPageNodeChipsButtonsRow
 import es.alfred.kmanager.view.page.frontales.section.FrontalesPageNodeChipsRow
-import es.alfred.kmanager.view.page.frontales.section.FrontalesPageNodeRun01Row
+import es.alfred.kmanager.view.page.frontales.section.FrontalesPageNodeUpperRow
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageNode {
-    private val frontNodepageRow01: FrontalesPageNodeRun01Row = FrontalesPageNodeRun01Row()
-    private val frontNodepageChipsRow: FrontalesPageNodeChipsRow = FrontalesPageNodeChipsRow()
-    private val frontNodepageChiposButtonsRow: FrontalesPageNodeChipsButtonsRow = FrontalesPageNodeChipsButtonsRow()
+    private val frontPageNodeUpperRow: FrontalesPageNodeUpperRow = FrontalesPageNodeUpperRow()
+    private val frontPageNodeChipsRow: FrontalesPageNodeChipsRow = FrontalesPageNodeChipsRow()
+    private val frontPageNodeChipsButtonsRow: FrontalesPageNodeChipsButtonsRow = FrontalesPageNodeChipsButtonsRow()
 
     @Composable
     fun createPage() {
@@ -30,13 +30,13 @@ class FrontalesPageNode {
         flagFirstTime = false
 
         Spacer(Modifier.height(20.dp))
-        frontNodepageRow01.getNodeRunRow01()
+        frontPageNodeUpperRow.showRow()
 
         Spacer(Modifier.height(20.dp))
-        frontNodepageChipsRow.nodeChipsRow(chipsSelected)
+        frontPageNodeChipsRow.showRow(chipsSelected)
 
         Spacer(Modifier.height(40.dp))
-        frontNodepageChiposButtonsRow.nodeChipsActionsRow(chipsSelected)
+        frontPageNodeChipsButtonsRow.showRow(chipsSelected)
     }
 
     @Composable

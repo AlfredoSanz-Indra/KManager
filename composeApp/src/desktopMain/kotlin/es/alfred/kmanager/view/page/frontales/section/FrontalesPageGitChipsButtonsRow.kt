@@ -29,12 +29,12 @@ import mu.KotlinLogging
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageGitChipsActionButtonsRow {
+class FrontalesPageGitChipsButtonsRow {
     private val logger = KotlinLogging.logger {}
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable
-    fun gitChipsActionsRow(chipsSelected: MutableMap<String, Boolean>) {
+    fun showRow(chipsSelected: MutableMap<String, Boolean>) {
 
         Row(
             Modifier.background(color = Color.White).width(800.dp),
@@ -42,12 +42,12 @@ class FrontalesPageGitChipsActionButtonsRow {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            gitpullActionButton(chipsSelected)
+            gitPullButton(chipsSelected)
         }
     }
 
     @Composable
-    private fun gitpullActionButton(chipsSelected: MutableMap<String, Boolean>) {
+    private fun gitPullButton(chipsSelected: MutableMap<String, Boolean>) {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()

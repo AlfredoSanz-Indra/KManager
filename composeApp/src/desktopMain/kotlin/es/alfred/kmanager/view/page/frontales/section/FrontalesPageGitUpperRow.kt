@@ -28,11 +28,11 @@ import kotlinx.coroutines.launch
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageGitPullButtonsRow {
+class FrontalesPageGitUpperRow {
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable
-    fun gitpullsButtonRow() {
+    fun showRow() {
         Row(Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically

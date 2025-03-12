@@ -23,13 +23,13 @@ import mu.KotlinLogging
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageGitChipsOperationsRow {
+class FrontalesPageGitChipsBranchesButtonsRow {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun gitChipsOperationsRow(chipsSelected: MutableMap<String, Boolean>,
-                              branchName: String,
-                              onBranchesUpdate: (Boolean) -> Unit) {
+    fun showRow(chipsSelected: MutableMap<String, Boolean>,
+                branchName: String,
+                onBranchesUpdate: (Boolean) -> Unit) {
 
         var flagOpenDialogConfirm: Boolean by remember { mutableStateOf(false) }
         var flagDoPush: Boolean by remember { mutableStateOf(false)}
@@ -50,7 +50,7 @@ class FrontalesPageGitChipsOperationsRow {
             this.makePush(chipsSelected, branchName, onBranchesUpdate)
         }
 
-        gitChipsOperationsRowMain(chipsSelected,
+        gitChipsOperationRow(chipsSelected,
                                   branchName,
                                   onBranchesUpdate,
                                   onOpenDialog= {
@@ -59,17 +59,17 @@ class FrontalesPageGitChipsOperationsRow {
     }
 
     @Composable
-    private fun gitChipsOperationsRowMain(chipsSelected: MutableMap<String, Boolean>,
-                                          branchName: String,
-                                          onBranchesUpdate: (Boolean) -> Unit,
-                                          onOpenDialog: () -> Unit) {
+    private fun gitChipsOperationRow(chipsSelected: MutableMap<String, Boolean>,
+                                     branchName: String,
+                                     onBranchesUpdate: (Boolean) -> Unit,
+                                     onOpenDialog: () -> Unit) {
         Row(
             Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            gitOperationsActionButtons(chipsSelected,
+            gitOperationsButtons(chipsSelected,
                                        branchName,
                                        onBranchesUpdate,
                                        onOpenDialog
@@ -78,25 +78,25 @@ class FrontalesPageGitChipsOperationsRow {
     }
 
     @Composable
-    private fun gitOperationsActionButtons(chipsSelected: MutableMap<String, Boolean>,
-                                   branchName: String,
-                                   onBranchesUpdate: (Boolean) -> Unit,
-                                   onOpenDialog: () -> Unit) {
+    private fun gitOperationsButtons(chipsSelected: MutableMap<String, Boolean>,
+                                     branchName: String,
+                                     onBranchesUpdate: (Boolean) -> Unit,
+                                     onOpenDialog: () -> Unit) {
         var lastText = ""
         if(branchName.isNotBlank() && branchName.length > 10) {
             lastText = branchName.trim().substring (branchName.length-9)
         }
         
-        gitOperationsActionCheckoutButton(chipsSelected, branchName, lastText, onBranchesUpdate)
+        gitOperationsOperationsCheckoutButton(chipsSelected, branchName, lastText, onBranchesUpdate)
         Spacer(Modifier.width(20.dp))
-        gitOperationsActionPushButton(chipsSelected, branchName, lastText, onOpenDialog)
+        gitOperationsPushButton(chipsSelected, branchName, lastText, onOpenDialog)
     }
 
     @Composable
-    private fun gitOperationsActionCheckoutButton(chipsSelected: MutableMap<String, Boolean>,
-                                          branchName: String,
-                                          lastText: String = "",
-                                          onBranchesUpdate: (Boolean) -> Unit) {
+    private fun gitOperationsOperationsCheckoutButton(chipsSelected: MutableMap<String, Boolean>,
+                                                      branchName: String,
+                                                      lastText: String = "",
+                                                      onBranchesUpdate: (Boolean) -> Unit) {
         val operationsUseCase: OperationsUseCase = UseCaseFactory.getOperationsUseCase()
         val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
         val coroutineScope = rememberCoroutineScope()
@@ -140,10 +140,10 @@ class FrontalesPageGitChipsOperationsRow {
     }
 
     @Composable
-    private fun gitOperationsActionPushButton(chipsSelected: MutableMap<String, Boolean>,
-                                      branchName: String,
-                                      lastText: String = "",
-                                      onOpenDialog: () -> Unit) {
+    private fun gitOperationsPushButton(chipsSelected: MutableMap<String, Boolean>,
+                                        branchName: String,
+                                        lastText: String = "",
+                                        onOpenDialog: () -> Unit) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)

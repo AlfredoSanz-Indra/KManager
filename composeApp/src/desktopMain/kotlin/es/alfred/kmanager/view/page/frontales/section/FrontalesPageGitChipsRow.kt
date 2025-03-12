@@ -23,7 +23,7 @@ import es.alfred.kmanager.core.resources.TheResources
 class FrontalesPageGitChipsRow {
 
     @Composable
-    fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
+    fun showRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
         val items: List<Any> = TheResources.getResources().projects
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 

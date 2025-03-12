@@ -15,11 +15,10 @@ import androidx.compose.ui.unit.dp
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageNodeRun01Row {
+class FrontalesPageNodeUpperRow {
 
     @Composable
-    fun getNodeRunRow01() {
-
+    fun showRow() {
         Row(
             Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,

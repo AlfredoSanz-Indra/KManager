@@ -34,28 +34,28 @@ class FrontalesPageNodeChipsButtonsRow {
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable
-    fun nodeChipsActionsRow(chipsSelected: MutableMap<String, Boolean>) {
+    fun showRow(chipsSelected: MutableMap<String, Boolean>) {
         Row(
             Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            nodeActionButtons(chipsSelected)
+            nodeChipsButtons(chipsSelected)
         }
     }
 
     @Composable
-    private fun nodeActionButtons(chipsSelected: MutableMap<String, Boolean>) {
-        nodeRunActionButton(chipsSelected)
+    private fun nodeChipsButtons(chipsSelected: MutableMap<String, Boolean>) {
+        nodeRunButton(chipsSelected)
 
         Spacer(Modifier.width(20.dp))
 
-        nodeTestActionButton(chipsSelected)
+        nodeTestButton(chipsSelected)
     }
 
     @Composable
-    private fun nodeRunActionButton(chipsSelected: MutableMap<String, Boolean>) {
+    private fun nodeRunButton(chipsSelected: MutableMap<String, Boolean>) {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
@@ -92,7 +92,7 @@ class FrontalesPageNodeChipsButtonsRow {
     }
 
     @Composable
-    private fun nodeTestActionButton(chipsSelected: MutableMap<String, Boolean>) {
+    private fun nodeTestButton(chipsSelected: MutableMap<String, Boolean>) {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
