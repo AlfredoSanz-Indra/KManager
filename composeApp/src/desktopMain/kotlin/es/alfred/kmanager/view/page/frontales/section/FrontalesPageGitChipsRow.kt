@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,8 +23,7 @@ import es.alfred.kmanager.core.resources.TheResources
 class FrontalesPageGitChipsRow {
 
     @Composable
-    fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
-
+    fun showRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
         val items: List<Any> = TheResources.getResources().projects
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 
@@ -46,7 +45,6 @@ class FrontalesPageGitChipsRow {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
     @Composable
     private fun gitChip(item: Project, chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
-
         var selected by remember { mutableStateOf(false) }
 
         FilterChip(

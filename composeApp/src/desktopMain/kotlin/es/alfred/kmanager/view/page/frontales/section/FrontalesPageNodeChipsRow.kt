@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,8 +22,7 @@ import es.alfred.kmanager.core.resources.TheResources
 class FrontalesPageNodeChipsRow {
 
     @Composable
-    fun nodeChipsRow(chipsSelected: MutableMap<String, Boolean>) {
-
+    fun showRow(chipsSelected: MutableMap<String, Boolean>) {
         val items: List<Any> = TheResources.getResources().projects.filter{ it -> it.runnable }
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 
@@ -45,7 +44,6 @@ class FrontalesPageNodeChipsRow {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
     @Composable
     private fun nodeChip(item: Project, chipsSelected: MutableMap<String, Boolean>) {
-
         var selected by remember { mutableStateOf(false) }
 
         FilterChip(
