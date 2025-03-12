@@ -1,9 +1,12 @@
 package es.alfred.kmanager.view.page.frontales
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.di.UseCaseFactory
 import es.alfred.kmanager.core.resources.TheResources
@@ -25,7 +28,7 @@ class FrontalesPageGit {
     private val frontpageGitUpperRow: FrontalesPageGitUpperRow = FrontalesPageGitUpperRow()
     private val frontpageGitChipsRow: FrontalesPageGitChipsRow = FrontalesPageGitChipsRow()
     private val frontpageGitChipsButtonsRow: FrontalesPageGitChipsButtonsRow = FrontalesPageGitChipsButtonsRow()
-    private val frontPageGitBranchControlsRow: FrontalesPageGitChipsBranchesRow = FrontalesPageGitChipsBranchesRow()
+    private val frontPageGitChipsBranchesRow: FrontalesPageGitChipsBranchesRow = FrontalesPageGitChipsBranchesRow()
     private val frontpageGitChipCheckoutsRow: FrontalesPageGitChipsBranchesButtonsRow = FrontalesPageGitChipsBranchesButtonsRow()
 
     @Composable
@@ -54,20 +57,20 @@ class FrontalesPageGit {
             })
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         this.frontpageGitUpperRow.showRow()
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         this.frontpageGitChipsRow.showRow(chipsSelected,
                                              onChipSelected = {
                                                  flagChipSelected = true
                                              })
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         this.frontpageGitChipsButtonsRow.showRow(chipsSelected)
 
-        Spacer(Modifier.height(20.dp))
-        this.frontPageGitBranchControlsRow.showRow(branches,
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
+        this.frontPageGitChipsBranchesRow.showRow(branches,
                                                           onValueChange = {
                                                               branchName = it
                                                           },
@@ -75,7 +78,7 @@ class FrontalesPageGit {
                                                               branchName = it
                                                           })
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         this.frontpageGitChipCheckoutsRow.showRow(chipsSelected,
                                                                 branchName,
                                                                 onBranchesUpdate = {

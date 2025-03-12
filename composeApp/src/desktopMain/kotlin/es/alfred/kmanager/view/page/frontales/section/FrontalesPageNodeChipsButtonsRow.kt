@@ -3,10 +3,7 @@ package es.alfred.kmanager.view.page.frontales.section
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -36,7 +33,9 @@ class FrontalesPageNodeChipsButtonsRow {
     @Composable
     fun showRow(chipsSelected: MutableMap<String, Boolean>) {
         Row(
-            Modifier.background(color = Color.White).width(800.dp),
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -59,7 +58,7 @@ class FrontalesPageNodeChipsButtonsRow {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF666699) else Color(0xFF361039)
+        val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(modifier = Modifier.width(200.dp),
@@ -96,7 +95,7 @@ class FrontalesPageNodeChipsButtonsRow {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF666699) else Color(0xFF361039)
+        val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(modifier = Modifier.width(200.dp),

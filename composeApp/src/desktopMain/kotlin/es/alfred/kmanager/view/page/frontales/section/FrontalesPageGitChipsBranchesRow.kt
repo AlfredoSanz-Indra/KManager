@@ -29,7 +29,9 @@ class FrontalesPageGitChipsBranchesRow {
         var option: Int by remember { mutableStateOf(1) }
 
         Row(
-            Modifier.background(color = Color.White).width(800.dp),
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -38,7 +40,9 @@ class FrontalesPageGitChipsBranchesRow {
         }
 
         Row(
-            Modifier.background(color = Color.White).width(800.dp),
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -119,7 +123,7 @@ class FrontalesPageGitChipsBranchesRow {
 
         OutlinedTextField(
             value = txBranchName,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.height(90.dp).fillMaxSize(1f).padding(10.dp),
             onValueChange = {
                 txBranchName = it
                 onValueChange(txBranchName.text)

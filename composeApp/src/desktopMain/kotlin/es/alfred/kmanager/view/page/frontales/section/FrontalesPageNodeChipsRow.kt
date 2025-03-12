@@ -28,7 +28,9 @@ class FrontalesPageNodeChipsRow {
 
         for(group in itemsGroup) {
             Row(
-                Modifier.background(color = Color.White).width(800.dp),
+                Modifier
+                    .background(color = Color(0xFFf7f6ff))
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -55,9 +57,9 @@ class FrontalesPageNodeChipsRow {
             label = { Text(item.label) },
             modifier = Modifier,
             colors = FilterChipDefaults.filterChipColors(
-                containerColor = Color(0xFF336699),
+                containerColor = Color(0xFF7BB661),
                 labelColor = Color.White,
-                selectedContainerColor = Color(0XFFe83151),
+                selectedContainerColor = Color(0xFF666611),
                 selectedLabelColor = Color.White
             ),
             leadingIcon = {

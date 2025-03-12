@@ -1,9 +1,12 @@
 package es.alfred.kmanager.view.page.frontales
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.view.page.frontales.section.FrontalesPageNodeChipsButtonsRow
@@ -29,13 +32,13 @@ class FrontalesPageNode {
         }
         flagFirstTime = false
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         frontPageNodeUpperRow.showRow()
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         frontPageNodeChipsRow.showRow(chipsSelected)
 
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         frontPageNodeChipsButtonsRow.showRow(chipsSelected)
     }
 
