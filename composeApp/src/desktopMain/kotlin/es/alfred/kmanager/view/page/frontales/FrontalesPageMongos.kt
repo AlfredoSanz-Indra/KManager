@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page
+package es.alfred.kmanager.view.page.frontales
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ import mu.KotlinLogging
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageMongo {
+class FrontalesPageMongos {
     private val logger = KotlinLogging.logger {}
 
     @Composable
@@ -33,7 +34,8 @@ class FrontalesPageMongo {
         logger.info { "creating view MONGO" }
         Spacer(Modifier.height(20.dp))
 
-        Row(Modifier.background(color = Color.White).width(800.dp),
+        Row(
+            Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -42,7 +44,8 @@ class FrontalesPageMongo {
 
         Spacer(Modifier.height(20.dp))
 
-        Row(Modifier.background(color = Color.White).width(800.dp),
+        Row(
+            Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -63,14 +66,16 @@ class FrontalesPageMongo {
         val color = if (isPressed) Color(0xFF949601) else Color(0xFF849601)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
-        OutlinedButton(modifier = Modifier.width(250.dp),
+        OutlinedButton(
+            modifier = Modifier.width(250.dp),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = color,
                 contentColor = Color(0xFFF5F5F5),
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true)
+                .copy(brush = Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 coroutineScope.launch {
@@ -87,14 +92,16 @@ class FrontalesPageMongo {
 
         Spacer(Modifier.width(20.dp))
 
-        OutlinedButton(modifier = Modifier.width(250.dp),
+        OutlinedButton(
+            modifier = Modifier.width(250.dp),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = color,
                 contentColor = Color(0xFFF5F5F5),
                 disabledContentColor = Color(0XFFe83151),
                 disabledContainerColor = Color(0XFFe83151)
             ),
-            border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
+            border = ButtonDefaults.outlinedButtonBorder(true)
+                .copy(brush = Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
                 coroutineScope.launch {
@@ -106,10 +113,9 @@ class FrontalesPageMongo {
                     }
                     val result = defer.await()
 
-                    mongoIsAlive = if(result.result) {
+                    mongoIsAlive = if (result.result) {
                         TextFieldValue("Is Alive")
-                    }
-                    else {
+                    } else {
                         TextFieldValue("is Offline")
                     }
                 }
@@ -122,13 +128,13 @@ class FrontalesPageMongo {
         Spacer(Modifier.width(20.dp))
 
         Text(
-            text= mongoIsAlive.text,
-            color = if(mongoIsAlive.text == "is Offline") {
-                        Color.Red
-                    } else {
-                        Color.Black
-                    }
-            )
+            text = mongoIsAlive.text,
+            color = if (mongoIsAlive.text == "is Offline") {
+                Color.Red
+            } else {
+                Color.Black
+            }
+        )
     }
 
     @Composable
@@ -150,7 +156,7 @@ class FrontalesPageMongo {
                 disabledContainerColor = Color(0XFFe83151)
             ),
             border = ButtonDefaults.outlinedButtonBorder(true).copy(
-                brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                brush = Brush.horizontalGradient(
                     listOf(borderColor, borderColor)
                 )
             ),

@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page
+package es.alfred.kmanager.view.page.frontales
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -6,8 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.di.UseCaseFactory
+import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.domain.usecaseapi.OperationsUseCase
-import es.alfred.kmanager.view.page.section.*
+import es.alfred.kmanager.view.page.frontales.section.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -21,20 +22,24 @@ import mu.KotlinLogging
 class FrontalesPageGit {
     private val logger = KotlinLogging.logger {}
 
-    private val frontpageGitPullButtonsRow: FrontalesPageGitPullButtonsRow = FrontalesPageGitPullButtonsRow();
+    private val frontpageGitPullButtonsRow: FrontalesPageGitPullButtonsRow = FrontalesPageGitPullButtonsRow()
     private val frontpageGitChipRow: FrontalesPageGitChipsRow = FrontalesPageGitChipsRow()
     private val frontpageGitChipActionButtons: FrontalesPageGitChipsActionButtonsRow = FrontalesPageGitChipsActionButtonsRow()
     private val frontpageGitChipCheckoutsRow: FrontalesPageGitChipsOperationsRow = FrontalesPageGitChipsOperationsRow()
     private val frontPageGitBranchControlsRow: FrontalesPageGitBranchControlsRow = FrontalesPageGitBranchControlsRow()
 
     @Composable
-    fun createPage( chipsSelected: MutableMap<String, Boolean>) {
+    fun createPage() {
         var branchName by remember  { mutableStateOf("") }
         var flagUpdatedBranchList by remember { mutableStateOf(false) }
         var flagFirstTime by remember { mutableStateOf(true) }
         var flagChipSelected by remember { mutableStateOf(false) }
         val branches: MutableList<String> = remember { mutableStateListOf() }
+        val chipsSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }
 
+        if(flagFirstTime) {
+            getProjectsData(chipsSelected)
+        }
         if(!flagFirstTime && flagUpdatedBranchList) {
             updateBranchesList(branches, chipsSelected, onFinish = {
                 flagChipSelected = false
@@ -76,6 +81,14 @@ class FrontalesPageGit {
                                                                 onBranchesUpdate = {
                                                                     flagUpdatedBranchList = true
                                                                 })
+    }
+
+    @Composable
+    private fun getProjectsData(chipsSelected: MutableMap<String, Boolean>) {
+        if(chipsSelected.isEmpty()) {
+            TheResources.getResources().projects
+                .forEach { chipsSelected[it.task] = false }
+        }
     }
 
     @Composable

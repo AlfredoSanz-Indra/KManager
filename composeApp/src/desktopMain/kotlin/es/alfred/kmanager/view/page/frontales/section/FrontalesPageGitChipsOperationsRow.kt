@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource

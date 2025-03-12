@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,14 +15,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
 class FrontalesPageGitBranchControlsRow {
-    private val logger = KotlinLogging.logger {}
 
     @Composable
     fun gitControlsRow(branchList:List<String>,

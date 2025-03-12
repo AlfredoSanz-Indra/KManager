@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,17 +15,16 @@ import es.alfred.kmanager.core.Util
 import es.alfred.kmanager.core.model.Project
 import es.alfred.kmanager.core.resources.TheResources
 
-
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageGitChipsRow {
+class FrontalesPageNodeChipsRow {
 
     @Composable
-    fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
+    fun nodeChipsRow(chipsSelected: MutableMap<String, Boolean>) {
 
-        val items: List<Any> = TheResources.getResources().projects
+        val items: List<Any> = TheResources.getResources().projects.filter{ it -> it.runnable }
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 
         for(group in itemsGroup) {
@@ -37,7 +36,7 @@ class FrontalesPageGitChipsRow {
                 Spacer(Modifier.width(20.dp))
 
                 for(item in group) {
-                    gitChip(item as Project, chipsSelected, onChipSelected)
+                    nodeChip(item as Project, chipsSelected)
                 }
             }//row
         }//for
@@ -45,7 +44,7 @@ class FrontalesPageGitChipsRow {
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
     @Composable
-    private fun gitChip(item: Project, chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
+    private fun nodeChip(item: Project, chipsSelected: MutableMap<String, Boolean>) {
 
         var selected by remember { mutableStateOf(false) }
 
@@ -54,14 +53,13 @@ class FrontalesPageGitChipsRow {
             onClick = {
                 selected = !selected
                 chipsSelected[item.task] = selected
-                onChipSelected(true)
             },
             label = { Text(item.label) },
             modifier = Modifier,
             colors = FilterChipDefaults.filterChipColors(
-                containerColor = Color(0xFF7BB661),
+                containerColor = Color(0xFF336699),
                 labelColor = Color.White,
-                selectedContainerColor = Color(0xFF666611),
+                selectedContainerColor = Color(0XFFe83151),
                 selectedLabelColor = Color.White
             ),
             leadingIcon = {

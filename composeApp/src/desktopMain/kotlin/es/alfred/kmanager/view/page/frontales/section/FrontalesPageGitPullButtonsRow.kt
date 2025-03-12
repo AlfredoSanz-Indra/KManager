@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,43 +23,35 @@ import es.alfred.kmanager.domain.usecaseapi.AntUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageNodeChipsButtonsRow {
-    private val logger = KotlinLogging.logger {}
+class FrontalesPageGitPullButtonsRow {
     private val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
 
     @Composable
-    fun nodeChipsActionsRow(chipsSelected: MutableMap<String, Boolean>) {
-        Row(
-            Modifier.background(color = Color.White).width(800.dp),
+    fun gitpullsButtonRow() {
+        Row(Modifier.background(color = Color.White).width(800.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            nodeActionButtons(chipsSelected)
+            gitBranchButton()
+
+            Spacer(Modifier.width(20.dp))
+            gitpullallButton()
         }
     }
 
-    @Composable
-    private fun nodeActionButtons(chipsSelected: MutableMap<String, Boolean>) {
-        nodeRunActionButton(chipsSelected)
-
-        Spacer(Modifier.width(20.dp))
-
-        nodeTestActionButton(chipsSelected)
-    }
 
     @Composable
-    private fun nodeRunActionButton(chipsSelected: MutableMap<String, Boolean>) {
+    private fun gitBranchButton() {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF666699) else Color(0xFF361039)
+        val color = if (isPressed) Color(0xFF949601) else Color(0xFF849601)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(modifier = Modifier.width(200.dp),
@@ -72,34 +64,28 @@ class FrontalesPageNodeChipsButtonsRow {
             border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
-                val chips = chipsSelected.filter { it -> it.value }
-                val canGoon = validateOperation(chips)
-
-                if(canGoon) {
-                    coroutineScope.launch {
-                        val defer = async(Dispatchers.IO) {
-                            val chipsSelectedList = chips.keys.toList()
-                            antUseCase.nodeRunMicroFList(chipsSelectedList)
-                        }
-                        defer.await()
+                coroutineScope.launch {
+                    val defer = async(Dispatchers.IO) {
+                        antUseCase.gitBranch()
                     }
+                    defer.await()
                 }
             }
         )
         {
-            Text("Node Run projects")
+            Text("Git Branch")
         }
     }
 
     @Composable
-    private fun nodeTestActionButton(chipsSelected: MutableMap<String, Boolean>) {
+    private fun gitpullallButton() {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF666699) else Color(0xFF361039)
+        val color = if (isPressed) Color(0xFF949601) else Color(0xFF849601)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
-        OutlinedButton(modifier = Modifier.width(200.dp),
+        OutlinedButton( modifier = Modifier.width(200.dp),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = color,
                 contentColor = Color(0xFFF5F5F5),
@@ -109,36 +95,16 @@ class FrontalesPageNodeChipsButtonsRow {
             border = ButtonDefaults.outlinedButtonBorder(true).copy(brush = androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(borderColor, borderColor))),
             interactionSource = interactionSource,
             onClick = {
-                val chips = chipsSelected.filter { it -> it.value }
-                val canGoon = validateOperation(chips)
-
-                if(canGoon) {
-                    coroutineScope.launch {
-                        val defer = async(Dispatchers.IO) {
-                            val chipsSelectedList = chips.keys.toList()
-                            antUseCase.nodeRunTestMicroFList(chipsSelectedList)
-                        }
-                        defer.await()
+                coroutineScope.launch {
+                    val defer = async(Dispatchers.IO) {
+                        antUseCase.gitPullAll()
                     }
+                    defer.await()
                 }
             }
         )
         {
-            Text("Node Test projects")
+            Text("Git pull All")
         }
-    }
-
-    private fun validateOperation(chips: Map<String, Boolean>): Boolean {
-        var result = true
-        if (chips.isEmpty()) {
-            logger.info { "No hay proyecto seleccionado" }
-            result = false
-        }
-        if (chips.size > 1) {
-            logger.info { "Solo se puede seleccionar un proyecto para esta funcion" }
-            result = false
-        }
-
-        return result
     }
 }

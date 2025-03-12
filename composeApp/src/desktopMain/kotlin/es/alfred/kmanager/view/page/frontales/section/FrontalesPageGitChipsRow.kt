@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.section
+package es.alfred.kmanager.view.page.frontales.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,16 +15,16 @@ import es.alfred.kmanager.core.Util
 import es.alfred.kmanager.core.model.Project
 import es.alfred.kmanager.core.resources.TheResources
 
+
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
-class FrontalesPageNodeChipsRow {
+class FrontalesPageGitChipsRow {
 
     @Composable
-    fun nodeChipsRow(chipsSelected: MutableMap<String, Boolean>) {
-
-        val items: List<Any> = TheResources.getResources().projects.filter{ it -> it.runnable }
+    fun gitChipsRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
+        val items: List<Any> = TheResources.getResources().projects
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 
         for(group in itemsGroup) {
@@ -36,7 +36,7 @@ class FrontalesPageNodeChipsRow {
                 Spacer(Modifier.width(20.dp))
 
                 for(item in group) {
-                    nodeChip(item as Project, chipsSelected)
+                    gitChip(item as Project, chipsSelected, onChipSelected)
                 }
             }//row
         }//for
@@ -44,8 +44,7 @@ class FrontalesPageNodeChipsRow {
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
     @Composable
-    private fun nodeChip(item: Project, chipsSelected: MutableMap<String, Boolean>) {
-
+    private fun gitChip(item: Project, chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
         var selected by remember { mutableStateOf(false) }
 
         FilterChip(
@@ -53,13 +52,14 @@ class FrontalesPageNodeChipsRow {
             onClick = {
                 selected = !selected
                 chipsSelected[item.task] = selected
+                onChipSelected(true)
             },
             label = { Text(item.label) },
             modifier = Modifier,
             colors = FilterChipDefaults.filterChipColors(
-                containerColor = Color(0xFF336699),
+                containerColor = Color(0xFF7BB661),
                 labelColor = Color.White,
-                selectedContainerColor = Color(0XFFe83151),
+                selectedContainerColor = Color(0xFF666611),
                 selectedLabelColor = Color.White
             ),
             leadingIcon = {

@@ -10,11 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import es.alfred.kmanager.core.Constants
-import es.alfred.kmanager.core.resources.TheResources
-import es.alfred.kmanager.view.page.FrontalesPageGit
-import es.alfred.kmanager.view.page.FrontalesPageMongo
-import es.alfred.kmanager.view.page.FrontalesPageNode
-import es.alfred.kmanager.view.page.section.FrontalesPageMainButtons
+import es.alfred.kmanager.view.page.frontales.FrontalesPageGit
+import es.alfred.kmanager.view.page.frontales.FrontalesPageMongos
+import es.alfred.kmanager.view.page.frontales.FrontalesPageNode
+import es.alfred.kmanager.view.page.frontales.section.FrontalesPageMainButtons
 import mu.KotlinLogging
 
 /**
@@ -27,33 +26,12 @@ class FrontalesView() : IView {
     private val frontPageMainButtonsRow: FrontalesPageMainButtons = FrontalesPageMainButtons()
     private val frontPageGit: FrontalesPageGit = FrontalesPageGit()
     private val frontPageNode: FrontalesPageNode = FrontalesPageNode()
-    private val frontPageMongo: FrontalesPageMongo = FrontalesPageMongo()
-
-    @Composable
-    private fun initGlobal(chipsGitSelected: MutableMap<String, Boolean>,
-                           chipsNodeSelected: MutableMap<String, Boolean>) {
-        logger.info { "initGlobal, loading data from resources" }
-        if(chipsGitSelected.isEmpty()) {
-            logger.info { "loading chipsGitSelected" }
-            TheResources.getResources().projects
-                .forEach { it -> chipsGitSelected[it.task] = false }
-        }
-
-        if(chipsNodeSelected.isEmpty()) {
-            logger.info { "loading chipsNodeSelected" }
-            TheResources.getResources().projects
-                .filter { it -> it.runnable }
-                .forEach { it -> chipsNodeSelected[it.task] = false }
-        }
-    }
+    private val frontPageMongo: FrontalesPageMongos = FrontalesPageMongos()
 
     @Composable
     override fun createView() {
-        var showview: Byte by remember { mutableStateOf(0) }
-        val chipsGitSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }
-        val chipsNodeSelected: MutableMap<String, Boolean> = remember { mutableStateMapOf() }
-
-        this.initGlobal(chipsGitSelected, chipsNodeSelected)
+        logger.info { "createView" }
+        var showView: Byte by remember { mutableStateOf(0) }
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {
             Column {
@@ -64,18 +42,18 @@ class FrontalesView() : IView {
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    frontPageMainButtonsRow.createPage(onViewChange = {showview = it})
+                    frontPageMainButtonsRow.createPage(onViewChange = {showView = it})
                 }
 
-                if (Constants.theviewGit == showview) {
-                    frontPageGit.createPage(chipsGitSelected)
+                if (Constants.theviewGit == showView) {
+                    frontPageGit.createPage()
                 }
 
-                if (Constants.theviewNode == showview) {
-                    frontPageNode.createPage(chipsNodeSelected)
+                if (Constants.theviewNode == showView) {
+                    frontPageNode.createPage()
                 }
 
-                if (Constants.theviewTests == showview) {
+                if (Constants.theviewTests == showView) {
                     frontPageMongo.createPage()
                 }
             }
