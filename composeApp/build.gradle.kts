@@ -22,10 +22,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.jetbrains.compose.material.icons)
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.3")
             runtimeOnly("androidx.collection:collection:1.4.5")
 
@@ -50,7 +52,7 @@ compose.desktop {
             includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "KManager"
-            packageVersion = "1.1.0"
+            packageVersion = "1.1.1"
         }
     }
 }
