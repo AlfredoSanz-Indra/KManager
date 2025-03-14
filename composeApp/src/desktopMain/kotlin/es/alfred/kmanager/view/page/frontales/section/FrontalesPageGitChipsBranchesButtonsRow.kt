@@ -64,7 +64,9 @@ class FrontalesPageGitChipsBranchesButtonsRow {
                                      onBranchesUpdate: (Boolean) -> Unit,
                                      onOpenDialog: () -> Unit) {
         Row(
-            Modifier.background(color = Color.White).width(800.dp),
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {

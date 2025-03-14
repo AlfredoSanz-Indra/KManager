@@ -14,6 +14,7 @@ import es.alfred.kmanager.view.page.frontales.FrontalesPageGit
 import es.alfred.kmanager.view.page.frontales.FrontalesPageMongos
 import es.alfred.kmanager.view.page.frontales.FrontalesPageNode
 import es.alfred.kmanager.view.page.frontales.section.FrontalesPageMainButtons
+import es.alfred.kmanager.view.shared.KHeaderMenu
 import mu.KotlinLogging
 
 /**
@@ -23,22 +24,27 @@ import mu.KotlinLogging
 class FrontalesView() : IView {
     private val logger = KotlinLogging.logger {}
 
+    private val kheaderMenu: KHeaderMenu = KHeaderMenu()
     private val frontPageMainButtonsRow: FrontalesPageMainButtons = FrontalesPageMainButtons()
     private val frontPageGit: FrontalesPageGit = FrontalesPageGit()
     private val frontPageNode: FrontalesPageNode = FrontalesPageNode()
     private val frontPageMongo: FrontalesPageMongos = FrontalesPageMongos()
 
     @Composable
-    override fun createView() {
+    override fun createView(onChangeView: (String) -> Unit) {
         logger.info { "createView" }
         var showView: Byte by remember { mutableStateOf(0) }
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {
             Column {
+                kheaderMenu.createPage(onChangeView)
+                Spacer(Modifier.height(1.dp))
+
                 Row(
-                    Modifier.background(color = Color(0xFFF8F7FF))
-                        .height(130.dp)
-                        .width(800.dp),
+                    Modifier
+                        .background(color = Color(0xFFefe8ff))
+                        .height(100.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {

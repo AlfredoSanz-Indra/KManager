@@ -32,20 +32,24 @@ class FrontalesPageMongos {
     @Composable
     fun createPage() {
         logger.info { "creating view MONGO" }
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
 
         Row(
-            Modifier.background(color = Color.White).width(800.dp),
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             row01()
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(20.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
 
         Row(
-            Modifier.background(color = Color.White).width(800.dp),
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -63,7 +67,7 @@ class FrontalesPageMongos {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF949601) else Color(0xFF849601)
+        val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(
@@ -144,7 +148,7 @@ class FrontalesPageMongos {
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF949601) else Color(0xFF849601)
+        val color = if (isPressed) Color(0xFF666699) else Color(0xFF336699)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(

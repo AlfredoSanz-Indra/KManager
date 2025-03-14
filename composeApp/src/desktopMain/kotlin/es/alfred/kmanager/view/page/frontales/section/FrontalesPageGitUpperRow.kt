@@ -3,10 +3,7 @@ package es.alfred.kmanager.view.page.frontales.section
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -33,7 +30,9 @@ class FrontalesPageGitUpperRow {
 
     @Composable
     fun showRow() {
-        Row(Modifier.background(color = Color.White).width(800.dp),
+        Row(Modifier
+            .background(color = Color(0xFFf7f6ff))
+            .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {

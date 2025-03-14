@@ -11,6 +11,7 @@ import androidx.compose.ui.window.rememberWindowState
 import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.view.IView
 import es.alfred.kmanager.view.FrontalesView
+import es.alfred.kmanager.view.TasksView
 import mu.KotlinLogging
 
 /**
@@ -18,6 +19,7 @@ import mu.KotlinLogging
  * @date 2025
  */
 const val actionFrontales: String = "FRONTALES"
+const val actionTasks: String = "TASKING"
 
 
 @Composable
@@ -34,15 +36,25 @@ private fun initGlobal() {
 }
 
 @Composable
-private fun app(action: String) {
-    val v: IView
+private fun app(action: String, onChangeView: (String) -> Unit) {
+    val logger = KotlinLogging.logger {}
+    logger.info { "app -> action: $action" }
 
     initGlobal()
+    showView(action, onChangeView)
+}
 
-    when(action) {
+@Composable
+private fun showView(option: String, onChangeView: (String) -> Unit) {
+    val v: IView
+    when(option) {
         actionFrontales -> {
             v = FrontalesView()
-            v.createView()
+            v.createView(onChangeView)
+        }
+        actionTasks -> {
+            v = TasksView()
+            v.createView(onChangeView)
         }
     }
 }
@@ -51,14 +63,18 @@ fun main() = application {
     var action by remember { mutableStateOf(actionFrontales) }
 
     Window(onCloseRequest = ::exitApplication,
-        title = "KManager 1.0.12",
+        title = "KManager 1.1.2",
         state = rememberWindowState(width = 850.dp, height = 710.dp)
     ) {
         MenuBar {
             Menu("Options list", mnemonic = 'F') {
                 Item("Frontales", onClick = { action = actionFrontales }, shortcut = KeyShortcut(Key.C, ctrl = true))
+                Item("Tasks", onClick = { action = actionTasks }, shortcut = KeyShortcut(Key.T, ctrl = true))
             }
         }
-        app(action)
+        app(action,
+            onChangeView = {
+                action = it
+            })
     }
 }

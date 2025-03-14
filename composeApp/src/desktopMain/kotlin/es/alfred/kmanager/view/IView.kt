@@ -8,5 +8,5 @@ import androidx.compose.runtime.Composable
  */
 interface IView {
     @Composable
-    fun createView();
+    fun createView(onChangeView: (String) -> Unit)
 }

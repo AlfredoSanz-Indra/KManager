@@ -29,7 +29,9 @@ class FrontalesPageGitChipsRow {
 
         for(group in itemsGroup) {
             Row(
-                Modifier.background(color = Color.White).width(800.dp),
+                Modifier
+                    .background(color = Color(0xFFf7f6ff))
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {

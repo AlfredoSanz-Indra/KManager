@@ -45,7 +45,7 @@ class FrontalesPageMainButtons {
     private fun buttonGitCommands(onViewChoose: (Byte) -> Unit) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF949601) else Color(0xFF41521F)
+        val color = if (isPressed) Color(0xFF949601) else Color(0xFF35682d)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(modifier = Modifier.width(200.dp)
@@ -70,7 +70,7 @@ class FrontalesPageMainButtons {
     private fun buttonNodeCommands(onViewChoose: (Byte) -> Unit) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF949601) else Color(0xFF41521F)
+        val color = if (isPressed) Color(0xFF949601) else Color(0xFF35682d)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(modifier = Modifier.width(200.dp)
@@ -95,7 +95,7 @@ class FrontalesPageMainButtons {
     private fun buttonTest(onViewChoose: (Byte) -> Unit) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val color = if (isPressed) Color(0xFF949601) else Color(0xFF00021F)
+        val color = if (isPressed) Color(0xFF949601) else Color(0xFF35682d)
         val borderColor = if (isPressed) Color.Black else Color(0xFF666699)
 
         OutlinedButton(modifier = Modifier.width(100.dp).height(50.dp),
