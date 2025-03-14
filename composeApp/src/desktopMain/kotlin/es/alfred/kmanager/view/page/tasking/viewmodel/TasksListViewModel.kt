@@ -44,6 +44,10 @@ class TasksListViewModel: ViewModel(){
         logger.info { "Search -> generalError: ${_uiState.value.generalError}" }
     }
 
+    fun navNewTask() {
+        logger.info { "navNewTask" }
+    }
+
     fun updateTaskFieldSearch(txt: String) {
         logger.info { "updateTaskFieldSearch -> txt: ${txt}" }
         _uiState.update {
