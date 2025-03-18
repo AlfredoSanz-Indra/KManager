@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import es.alfred.kmanager.view.page.tasking.TasksDetail
 import es.alfred.kmanager.view.page.tasking.TasksList
+import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.shared.KHeaderMenu
 import mu.KotlinLogging
 
@@ -30,11 +31,11 @@ class TasksView() : IView {
                 kheaderMenu.createPage(onChangeView)
 
                 when (showView) {
-                    "new" -> tasksDetail.createPage("new", onNavigate = {
+                    "new" -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK, onNavigate = {
                         showView = it
                     })
 
-                    "update" -> tasksDetail.createPage("update", onNavigate = {
+                    "update" -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK, onNavigate = {
                         showView = it
                     })
 

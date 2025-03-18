@@ -1,6 +1,8 @@
 package es.alfred.kmanager.view.page.tasking.viewmodel
 
 import androidx.lifecycle.ViewModel
+import es.alfred.kmanager.core.util.DateTimeUtils
+import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,16 +22,44 @@ data class TasksDetailUiState(
     var taskNotes: String = "",
     var taskBranches: String = "",
     var taskCommits: String = "",
+    var taskDateReq: Long = 0,
+    var taskDateReqFormatted: String = "",
+    var taskDateEnd: Long = 0,
+    var taskDateEndFormatted: String = "",
     var generalError: Boolean = false,
     var generalErrorText: String = "",
     val title: String = "New Task",
-    var mode: String = "new"
+    var mode: Int = 1,
+    var showTaskDateReqDialog: Boolean = false,
+    var showTaskDateEndDialog: Boolean = false,
 )
 
 class TasksDetailViewModel: ViewModel(){
     private val logger = KotlinLogging.logger {}
     private val _uiState = MutableStateFlow(TasksDetailUiState())
     val uiState: StateFlow<TasksDetailUiState> = _uiState.asStateFlow()
+
+    fun setStateMode(stateMode: TasksStateModeEnum) {
+        logger.info { "setStateMode ->  stateMode: $stateMode" }
+        this.updateMode(stateMode.stateMode)
+
+        when(stateMode) {
+            TasksStateModeEnum.NEW_TASK -> creatingStateModeInit()
+            else -> updatingStateModeInit()
+        }
+    }
+
+    private fun creatingStateModeInit() {
+        logger.info { "creatingStateModeInit" }
+        updateTitle("New Task")
+        updateTaskDateReq(DateTimeUtils.currentDate(), DateTimeUtils.currentDateFormatted())
+        updateTaskDateEnd(DateTimeUtils.currentDate(), DateTimeUtils.currentDateFormatted())
+    }
+
+    private fun updatingStateModeInit() {
+        logger.info { "updatingStateModeInit" }
+        updateTitle("Update Task")
+    }
 
     fun addTaskStateToSelectedList(taskState: String) {
         logger.info { "addTaskStateToSelectedList -> taskState: $taskState" }
@@ -41,14 +71,36 @@ class TasksDetailViewModel: ViewModel(){
         logger.info { "addTaskStateToSelectedList -> taskStateSelectedList: ${_uiState.value.taskStateSelectedList}" }
     }
 
+    fun onDateReqSelected(dateInMill: Long) {
+        val dateFormatted = DateTimeUtils.dateToDateString(dateInMill)
+        logger.info { "onDateReqSelected -> dateFormatted: $dateFormatted" }
+        updateTaskDateReq(dateInMill, dateFormatted)
+        updateShowTaskDateReqDialog(false)
+    }
+
+    fun onDateEndSelected(dateInMill: Long) {
+        val dateFormatted = DateTimeUtils.dateToDateString(dateInMill)
+        logger.info { "onDateEndSelected -> dateFormatted: $dateFormatted" }
+        updateTaskDateEnd(dateInMill, dateFormatted)
+        updateShowTaskDateEndDialog(false)
+    }
+
+
     fun save() {
         logger.info { "save" }
     }
 
-    fun updateMode(txt: String) {
-        logger.info { "updateMode -> txt: $txt" }
+    private fun updateMode(num: Int) {
+        logger.info { "updateMode -> num: $num" }
         _uiState.update {
-            it.copy(mode = txt)
+            it.copy(mode = num)
+        }
+    }
+
+    private fun updateTitle(txt: String) {
+        logger.info { "updateTitle -> txt: $txt" }
+        _uiState.update {
+            it.copy(title = txt)
         }
     }
 
@@ -68,6 +120,36 @@ class TasksDetailViewModel: ViewModel(){
         logger.info { "updateTaskDesc -> txt: $txt" }
         _uiState.update {
             it.copy(taskDesc = txt)
+        }
+    }
+    private fun updateTaskDateReq(dateInMill: Long, dateInStr: String) {
+        _uiState.update {
+            it.copy(taskDateReq = dateInMill)
+        }
+
+        _uiState.update {
+            it.copy(taskDateReqFormatted = dateInStr)
+        }
+    }
+    private fun updateTaskDateEnd(dateInMill: Long, dateInStr: String) {
+        _uiState.update {
+            it.copy(taskDateEnd = dateInMill)
+        }
+
+        _uiState.update {
+            it.copy(taskDateEndFormatted = dateInStr)
+        }
+    }
+    fun updateShowTaskDateReqDialog(action: Boolean) {
+        logger.info { "updateShowTaskDateReqDialog -> action: $action" }
+        _uiState.update {
+            it.copy(showTaskDateReqDialog = action)
+        }
+    }
+    fun updateShowTaskDateEndDialog(action: Boolean) {
+        logger.info { "updateShowTaskDateEndDialog -> action: $action" }
+        _uiState.update {
+            it.copy(showTaskDateEndDialog = action)
         }
     }
     fun updateTaskNotes(txt: String) {
@@ -99,11 +181,13 @@ class TasksDetailViewModel: ViewModel(){
     }
 
     private fun clearState() {
+        updateTitle("")
         updateTaskName("")
-        updateMode("")
         updateTaskCommits("")
         updateTaskNotes("")
         updateTaskDesc("")
+        updateTaskDateReq(0, "")
+        updateTaskDateEnd(0, "")
         updateTaskJira("")
         updateTaskBranches("")
         _uiState.value.taskStateSelectedList.clear()

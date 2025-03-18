@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import es.alfred.kmanager.core.Util
+import es.alfred.kmanager.core.util.Util
 import es.alfred.kmanager.core.model.Project
 import es.alfred.kmanager.core.resources.TheResources
 

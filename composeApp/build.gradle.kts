@@ -31,6 +31,9 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.3")
             runtimeOnly("androidx.collection:collection:1.4.5")
 
+            //kotlinx-datetime
+            implementation(libs.kotlinx.datetime)
+
             //MONGODB
             implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.3.0")
             implementation("org.mongodb:bson-kotlinx:5.3.0")
@@ -52,7 +55,7 @@ compose.desktop {
             includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "KManager"
-            packageVersion = "1.1.2"
+            packageVersion = "1.1.3"
         }
     }
 }
