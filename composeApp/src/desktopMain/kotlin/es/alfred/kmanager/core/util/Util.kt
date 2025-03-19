@@ -1,4 +1,4 @@
-package es.alfred.kmanager.core
+package es.alfred.kmanager.core.util
 
 /**
  * @author Alfredo Sanz

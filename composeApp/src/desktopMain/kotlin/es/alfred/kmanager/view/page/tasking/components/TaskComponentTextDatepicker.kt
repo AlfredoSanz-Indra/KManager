@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,8 +22,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.getSelectedText
-import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -32,13 +31,13 @@ import mu.KotlinLogging
  * @author Alfredo Sanz
  * @date 2025
  */
-object TasksComponentText {
+object TaskComponentTextDatepicker {
 
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun show(conf: TasksComponentTextConf, onValueChange: (String) -> Unit) {
-        var textValue by rememberSaveable { mutableStateOf(TextFieldValue(conf.initialText, TextRange(3, 100))) }
+    fun show(conf: TasksComponentTextConf, dateFormatted: String, onOpenDatepicker: () -> Unit) {
+        var textValue by rememberSaveable { mutableStateOf(TextFieldValue(dateFormatted, TextRange(3, 100))) }
         var selectedText by rememberSaveable { mutableStateOf("") }
         var selectedTextBefore by rememberSaveable { mutableStateOf("") }
 
@@ -48,14 +47,8 @@ object TasksComponentText {
                 .height(conf.heigth)
                 .fillMaxWidth(conf.width)
                 .padding(0.dp),
-            onValueChange = {
-                if (it.text.length <= 100) {
-                    textValue = it
-                    onValueChange(textValue.text)
-                }
-                selectedText = it.getSelectedText().text
-                selectedTextBefore = it.getTextBeforeSelection(5000).text
-            },
+            onValueChange = {},
+            readOnly = true,
             textStyle = TextStyle(
                 color = Color.Black,
                 fontSize = conf.fontSize,
@@ -74,7 +67,8 @@ object TasksComponentText {
                         fontSize = conf.fontSize,
                         color = Color.LightGray
                     ),
-                )},
+                )
+            },
             isError = false,
             singleLine = true,
             shape = MaterialTheme.shapes.small,
@@ -86,6 +80,15 @@ object TasksComponentText {
                 focusedPlaceholderColor = Color.LightGray,
                 selectionColors = TextSelectionColors(Color.Blue, backgroundColor = Color.Yellow)
             ),
+            leadingIcon = {
+                IconButton(
+                    onClick = {
+                        onOpenDatepicker()
+                    }
+                ) {
+                    Icon(imageVector = Icons.Filled.CalendarToday, contentDescription = null)
+                }
+            },
             trailingIcon = {
                 IconButton(
                     onClick = {
@@ -96,11 +99,11 @@ object TasksComponentText {
                 }
             },
             visualTransformation = if(selectedText.isNotEmpty()) {
-                                        TasksComponentTextVisualTransfHighlighting(selectedText, selectedTextBefore)
-                                    }
-                                    else {
-                                        VisualTransformation.None
-                                    }
+                TasksComponentTextVisualTransfHighlighting(selectedText, selectedTextBefore)
+            }
+            else {
+                VisualTransformation.None
+            }
 
         )
     }

@@ -8,6 +8,8 @@ import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentTitle
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailActionsRow
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailStatesRow
+import es.alfred.kmanager.view.page.tasking.sections.TasksDetailsForm
+import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
 import mu.KotlinLogging
 
@@ -20,35 +22,25 @@ class TasksDetail {
     private val logger = KotlinLogging.logger {}
     private val tasksDetailActionsRow: TasksDetailActionsRow = TasksDetailActionsRow()
     private val tasksDetailStatesRow: TasksDetailStatesRow = TasksDetailStatesRow()
+    private val tasksDetailsForm: TasksDetailsForm = TasksDetailsForm()
 
     @Composable
-    fun createPage(mode: String,
+    fun createPage(stateMode: TasksStateModeEnum,
                    onNavigate: (String) -> Unit,
                    viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
 
         logger.info { "showRow -> list: ${viewModel.uiState.value.taskStateList}" }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        viewModel.updateMode(mode)
+        viewModel.setStateMode(stateMode)
 
-        TasksComponentTitle.show(getTitle())
+        TasksComponentTitle.show(uiState.title)
 
         tasksDetailActionsRow.showRow(onNavigate)
         tasksDetailStatesRow.showRow()
+        tasksDetailsForm.showRow()
 
         if(uiState.generalError) {
             TaskComponentError.show(uiState.generalErrorText)
-        }
-    }
-
-    @Composable
-    private fun getTitle(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }): String {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-        return if(uiState.mode == "new") {
-            "New Task"
-        }
-        else {
-            "Update Task"
         }
     }
 }
