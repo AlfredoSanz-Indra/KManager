@@ -12,15 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -36,24 +33,23 @@ object TaskComponentTextDatepicker {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun show(conf: TasksComponentTextConf, dateFormatted: String, onOpenDatepicker: () -> Unit) {
-        var textValue by rememberSaveable { mutableStateOf(TextFieldValue(dateFormatted, TextRange(3, 100))) }
-        var selectedText by rememberSaveable { mutableStateOf("") }
-        var selectedTextBefore by rememberSaveable { mutableStateOf("") }
+    fun show(conf: TasksComponentTextConf, onOpenDatepicker: () -> Unit, onDateDeleted: () -> Unit) {
+        val selectedText by rememberSaveable { mutableStateOf("") }
+        val selectedTextBefore by rememberSaveable { mutableStateOf("") }
 
         OutlinedTextField(
-            value = textValue,
+            value = conf.initialText,
             modifier = Modifier
                 .height(conf.heigth)
                 .fillMaxWidth(conf.width)
                 .padding(0.dp),
-            onValueChange = {},
+            onValueChange = { },
             readOnly = true,
             textStyle = TextStyle(
-                color = Color.Black,
+                color = Color(0xFF164462),
                 fontSize = conf.fontSize,
                 fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.W500,
                 fontStyle = FontStyle.Normal,
                 letterSpacing = 0.em,
                 background = Color.White,
@@ -92,7 +88,7 @@ object TaskComponentTextDatepicker {
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        textValue = TextFieldValue("")
+                        onDateDeleted()
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Clear, contentDescription = null)

@@ -26,7 +26,6 @@ class TasksDetailsForm {
 
     @Composable
     fun showRow(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
-        logger.info { "showRow" }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         val confName = standardTextConf("", "Name")
@@ -47,9 +46,9 @@ class TasksDetailsForm {
                                viewModel.updateTaskDesc(it)
                            })
 
-        val confDateReq = standardTextConf("", "Request date")
+        val confDateReq = standardTextConf(uiState.taskDateReqFormatted, "Request date")
         confDateReq.width = 0.45f
-        val confDateEnd = standardTextConf("", "FinishDate")
+        val confDateEnd = standardTextConf(uiState.taskDateEndFormatted, "Finish date")
         confDateEnd.width = 0.81f
         rowOfDatepicker2(confDateReq,
                          confDateEnd,
@@ -147,43 +146,49 @@ class TasksDetailsForm {
             Spacer(Modifier.width(20.dp))
 
             TaskComponentTextDatepicker.show(confA,
-                                             uiState.taskDateReqFormatted,
                                              onOpenDatepicker = {
-                                                 logger.info { "rowOfDatepicker2 -> Req, onOpenDatepicker" }
                                                  viewModel.updateShowTaskDateReqDialog(true)
+                                             },
+                                             onDateDeleted = {
+                                                 onValueChangeA(0L)
                                              })
 
             Spacer(Modifier.width(10.dp))
 
             TaskComponentTextDatepicker.show(confB,
-                                             uiState.taskDateEndFormatted,
                                              onOpenDatepicker = {
                                                  viewModel.updateShowTaskDateEndDialog(true)
-                                                 logger.info { "rowOfDatepicker2 -> End, onOpenDatepicker" }
+                                             },
+                                             onDateDeleted = {
+                                                 onValueChangeB(0L)
                                              })
         }
 
-        logger.info { "rowOfDatepicker2 ->  uiState.showTaskDateReqDialog: ${uiState.showTaskDateReqDialog}" }
-        logger.info { "rowOfDatepicker2 ->  uiState.showTaskDateEndDialog: ${uiState.showTaskDateEndDialog}" }
         if(uiState.showTaskDateReqDialog) {
+            var temporalDate = 0L
+            if(uiState.taskDateReq == 0L) {
+                temporalDate = viewModel.getCurrentDate()
+            }
             DialogDatePickerView.show(uiState.taskDateReq,
+                                      temporalDate,
                                       onClose = {
-                                          logger.info { "rowOfDatepicker2 ->  onClose" }
                                           viewModel.updateShowTaskDateReqDialog(false)
                                       },
                                       onDateSelected = {
-                                          logger.info { "rowOfDatepicker2 -> Req, onDateSelected: $it" }
                                           onValueChangeA(it)
                                       })
         }
         if(uiState.showTaskDateEndDialog) {
+            var temporalDate = 0L
+            if(uiState.taskDateEnd == 0L) {
+                temporalDate = viewModel.getCurrentDate()
+            }
             DialogDatePickerView.show(uiState.taskDateEnd,
+                                      temporalDate,
                                       onClose = {
-                                          logger.info { "rowOfDatepicker2 ->  onClose" }
                                           viewModel.updateShowTaskDateEndDialog(false)
                                       },
                                       onDateSelected = {
-                                          logger.info { "rowOfDatepicker2 -> End, onDateSelected: $it" }
                                           onValueChangeB(it)
                                       })
         }

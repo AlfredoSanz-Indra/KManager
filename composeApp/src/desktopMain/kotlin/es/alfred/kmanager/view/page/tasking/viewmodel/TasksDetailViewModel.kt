@@ -28,7 +28,7 @@ data class TasksDetailUiState(
     var taskDateEndFormatted: String = "",
     var generalError: Boolean = false,
     var generalErrorText: String = "",
-    val title: String = "New Task",
+    val title: String = "No Task",
     var mode: Int = 1,
     var showTaskDateReqDialog: Boolean = false,
     var showTaskDateEndDialog: Boolean = false,
@@ -53,7 +53,6 @@ class TasksDetailViewModel: ViewModel(){
         logger.info { "creatingStateModeInit" }
         updateTitle("New Task")
         updateTaskDateReq(DateTimeUtils.currentDate(), DateTimeUtils.currentDateFormatted())
-        updateTaskDateEnd(DateTimeUtils.currentDate(), DateTimeUtils.currentDateFormatted())
     }
 
     private fun updatingStateModeInit() {
@@ -72,19 +71,30 @@ class TasksDetailViewModel: ViewModel(){
     }
 
     fun onDateReqSelected(dateInMill: Long) {
-        val dateFormatted = DateTimeUtils.dateToDateString(dateInMill)
-        logger.info { "onDateReqSelected -> dateFormatted: $dateFormatted" }
+        var dateFormatted = ""
+        if(dateInMill != 0L) {
+            dateFormatted = DateTimeUtils.dateToDateString(dateInMill)
+        }
         updateTaskDateReq(dateInMill, dateFormatted)
         updateShowTaskDateReqDialog(false)
     }
 
     fun onDateEndSelected(dateInMill: Long) {
-        val dateFormatted = DateTimeUtils.dateToDateString(dateInMill)
+        var dateFormatted = ""
+        logger.info { "onDateEndSelected -> dateInMill: $dateInMill" }
+        if(dateInMill != 0L) {
+            dateFormatted = DateTimeUtils.dateToDateString(dateInMill)
+        }
         logger.info { "onDateEndSelected -> dateFormatted: $dateFormatted" }
         updateTaskDateEnd(dateInMill, dateFormatted)
         updateShowTaskDateEndDialog(false)
     }
 
+    fun getCurrentDate(): Long {
+        return DateTimeUtils.currentDate()
+//        val currentDateFormatted = DateTimeUtils.currentDateFormatted()
+//        updateTaskDateEnd(currentDate, currentDateFormatted)
+    }
 
     fun save() {
         logger.info { "save" }

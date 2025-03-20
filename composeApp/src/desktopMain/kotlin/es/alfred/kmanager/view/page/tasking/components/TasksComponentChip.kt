@@ -27,7 +27,6 @@ object TasksComponentChip {
     @Composable
     fun show(item: String, onSelectedChip: (String) -> Unit) {
         var selected by remember { mutableStateOf(false) }
-        logger.info { "show -> item: $item" }
 
         FilterChip(
             selected = selected,

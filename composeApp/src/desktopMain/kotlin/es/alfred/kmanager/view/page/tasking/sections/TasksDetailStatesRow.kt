@@ -2,7 +2,8 @@ package es.alfred.kmanager.view.page.tasking.sections
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +24,6 @@ class TasksDetailStatesRow {
 
     @Composable
     fun showRow(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
-        logger.info { "showRow" }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         Row(

@@ -9,8 +9,8 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import es.alfred.kmanager.core.resources.TheResources
-import es.alfred.kmanager.view.IView
 import es.alfred.kmanager.view.FrontalesView
+import es.alfred.kmanager.view.IView
 import es.alfred.kmanager.view.TasksView
 import mu.KotlinLogging
 
@@ -63,7 +63,7 @@ fun main() = application {
     var action by remember { mutableStateOf(actionFrontales) }
 
     Window(onCloseRequest = ::exitApplication,
-        title = "KManager 1.1.3",
+        title = "KManager 1.1.4",
         state = rememberWindowState(width = 850.dp, height = 900.dp)
     ) {
         MenuBar {

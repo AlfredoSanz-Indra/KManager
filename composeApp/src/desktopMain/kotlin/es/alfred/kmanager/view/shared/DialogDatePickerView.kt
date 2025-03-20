@@ -1,8 +1,7 @@
 package es.alfred.kmanager.view.shared
 
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import mu.KotlinLogging
+import androidx.compose.runtime.Composable
 
 /**
  * @author Alfredo Sanz
@@ -10,13 +9,16 @@ import mu.KotlinLogging
  */
 object DialogDatePickerView {
 
-    private val logger = KotlinLogging.logger {}
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun show(initialDate: Long, onClose: () -> Unit, onDateSelected: (Long) -> Unit) {
-        var selectedDate by remember { mutableStateOf(initialDate) }
-        val internalState = rememberDatePickerState(initialSelectedDateMillis = selectedDate)
+    fun show(initialDate: Long, temporalDate: Long, onClose: () -> Unit, onDateSelected: (Long) -> Unit) {
+        val calSelectDate = if(initialDate == 0L) {
+            temporalDate
+        }
+        else {
+            initialDate
+        }
+        val internalState = rememberDatePickerState(initialSelectedDateMillis = calSelectDate)
 
         DatePickerDialog(
             onDismissRequest = {
@@ -25,8 +27,7 @@ object DialogDatePickerView {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        selectedDate = internalState.selectedDateMillis ?: 0L
-                        onDateSelected(internalState.selectedDateMillis ?: 1)
+                        onDateSelected(internalState.selectedDateMillis ?: 0L)
                     },
                     enabled = internalState.selectedDateMillis != null
                 ) {
