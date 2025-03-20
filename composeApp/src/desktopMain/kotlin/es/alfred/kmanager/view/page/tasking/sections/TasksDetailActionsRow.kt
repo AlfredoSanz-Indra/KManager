@@ -37,19 +37,19 @@ class TasksDetailActionsRow {
         ) {
             Spacer(Modifier.width(20.dp))
             TasksComponentButton.show("Save",
-                Color(0xFF336699),
-                110.dp,
-                onClick = {
-                    viewModel.save()
-                } )
+                                      Color(0xFF336699),
+                                      110.dp,
+                                      onClick = {
+                                          viewModel.save()
+                                      } )
 
             Spacer(Modifier.width(20.dp))
             TasksComponentButton.show("Cancel",
-                Color(0xFFe51d2e),
-                110.dp,
-                onClick = {
-                    onNavigate("list")
-                } )
+                                      Color(0xFFe51d2e),
+                                      110.dp,
+                                      onClick = {
+                                          onNavigate("list")
+                                      } )
         }//Row
     }
 }

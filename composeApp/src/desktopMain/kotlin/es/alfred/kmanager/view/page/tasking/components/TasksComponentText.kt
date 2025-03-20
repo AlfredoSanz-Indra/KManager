@@ -57,10 +57,10 @@ object TasksComponentText {
                 selectedTextBefore = it.getTextBeforeSelection(5000).text
             },
             textStyle = TextStyle(
-                color = Color.Black,
+                color = Color(0xFF164462),
                 fontSize = conf.fontSize,
                 fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.W500,
                 fontStyle = FontStyle.Normal,
                 letterSpacing = 0.em,
                 background = Color.White,

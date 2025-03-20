@@ -1,19 +1,9 @@
 package es.alfred.kmanager.core.util
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.format
+import kotlinx.datetime.*
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
-import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 
 
 /**
@@ -81,13 +71,13 @@ object DateTimeUtils {
 
     fun currentDate(): Long {
         val today = getCurrentLocalDate()
-        val todayDateTime: LocalDateTime = today.atTime(0,0)
+        val todayDateTime: LocalDateTime = today.atTime(8,0)
         return todayDateTime.toInstant(getLocalTimeZone()).toEpochMilliseconds()
     }
 
     fun currentDateFormatted(): String {
         val today = getCurrentLocalDate()
-        val todayDateTime: LocalDateTime = today.atTime(0,0)
+        val todayDateTime: LocalDateTime = today.atTime(8,0)
         val dtFormat: kotlinx.datetime.format.DateTimeFormat<LocalDateTime> = getDateTimeFormat("dd/MM/yyyy")
         val result: String = todayDateTime.format(dtFormat)
         return result
@@ -95,7 +85,7 @@ object DateTimeUtils {
 
     fun currentDatePlusDays(days: Long): Long {
         val today = getCurrentLocalDate()
-        val todayDateTime: LocalDateTime = today.atTime(0,0)
+        val todayDateTime: LocalDateTime = today.atTime(8,0)
         val todayInstant: kotlinx.datetime.Instant = todayDateTime.toInstant(getLocalTimeZone())
         val afterInstant: kotlinx.datetime.Instant = todayInstant.plus(days, DateTimeUnit.DAY, getLocalTimeZone())
         return afterInstant.toEpochMilliseconds()
@@ -103,7 +93,7 @@ object DateTimeUtils {
 
     fun currentDatePlusDaysDayOfWeek(days: Long): Int {
         val today = getCurrentLocalDate()
-        val todayDateTime: LocalDateTime = today.atTime(0,0)
+        val todayDateTime: LocalDateTime = today.atTime(8,0)
         val todayInstant: kotlinx.datetime.Instant = todayDateTime.toInstant(getLocalTimeZone())
         val afterInstant: kotlinx.datetime.Instant = todayInstant.plus(days, DateTimeUnit.DAY, getLocalTimeZone())
         val dayAfter: LocalDateTime = afterInstant.toLocalDateTime(getLocalTimeZone())
