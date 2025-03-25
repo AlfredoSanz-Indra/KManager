@@ -23,7 +23,7 @@ class TasksDetailStatesRow {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun showRow(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
+    fun showSection(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         Row(
