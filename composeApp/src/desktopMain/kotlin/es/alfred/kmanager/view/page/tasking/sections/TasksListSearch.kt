@@ -10,12 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
-import es.alfred.kmanager.view.page.tasking.components.TasksComponentButton
-import es.alfred.kmanager.view.page.tasking.components.TasksComponentChip
-import es.alfred.kmanager.view.page.tasking.components.TasksComponentText
+import es.alfred.kmanager.core.resources.TheResources
+import es.alfred.kmanager.view.page.tasking.components.*
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
 import es.alfred.kmanager.view.shared.ComponentsConfDataFactory
+import es.alfred.kmanager.view.shared.SelectData
 import mu.KotlinLogging
 
 /**
@@ -33,22 +32,66 @@ class TasksListSearch {
         logger.info { "showRow -> list: ${viewModel.uiState.value.taskStateList}" }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+        rowProjects()
+        rowChips()
+        rowTextAndActions(onNavigate)
+
+        if(uiState.generalError) {
+            TaskComponentError.showRow(uiState.generalErrorText)
+        }
+    }
+
+    @Composable
+    private fun rowProjects(viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
         Row(
             Modifier
-            .background(color = Color(0xFFf7f6ff))
-            .fillMaxWidth(),
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth()
+                .padding(horizontal= 20.dp, vertical = 5.dp),
+        ) {
+            //double row because of the background color
+            Row(
+                Modifier
+                    .background(color = Color(0xFFf7f6ff))
+                    .fillMaxWidth(0.6f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val projectList: List<SelectData> =
+                    TheResources.getResources().projects.map { SelectData(it.name, it.label) }
+
+                val conf = ComponentsConfDataFactory.standardSelectConf("Project", "Project", projectList)
+                TasksComponentSelect.show(conf, onSelectChange = {
+                    logger.info { "details -> onValueChange: $it" }
+                })
+            }
+        }//Row
+    }
+
+    @Composable
+    private fun rowChips(viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        Row(
+            Modifier
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(25.dp))
             for(item in uiState.taskStateList) {
                 TasksComponentChip.show(item,
-                                            onSelectedChip = {
-                                                viewModel.addTaskStateToSearchList(it)
-                                            })
+                    onSelectedChip = {
+                        viewModel.addTaskStateToSearchList(it)
+                    })
             }
         }
+    }
 
+    @Composable
+    private fun rowTextAndActions(onNavigate: (String) -> Unit,
+                                  viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
         Row(
             Modifier
                 .background(color = Color(0xFFf7f6ff))
@@ -58,31 +101,29 @@ class TasksListSearch {
         ) {
             Spacer(Modifier.width(20.dp))
             val conf = ComponentsConfDataFactory.standardTextConf("","Search text")
-            conf.width = 0.6f
+            conf.width = 0.59f
             TasksComponentText.show(conf,
-                                    onValueChange = {
-                                        viewModel.updateTaskFieldSearch(it)
-                                    })
+                onValueChange = {
+                    viewModel.updateTaskFieldSearch(it)
+                })
 
-            Spacer(Modifier.width(20.dp))
+            Spacer(Modifier.width(30.dp))
+
             TasksComponentButton.show("Search",
-                                      Color(0xFF336699),
-                                      110.dp,
-                                      onClick = {
-                                          viewModel.search()
-                                      } )
+                Color(0xFF336699),
+                110.dp,
+                onClick = {
+                    viewModel.search()
+                } )
 
             Spacer(Modifier.width(20.dp))
-            TasksComponentButton.show("New",
-                                       Color(0xFFe51d2e),
-                                       110.dp,
-                                       onClick = {
-                                           onNavigate("new")
-                                       } )
-        }//Row
 
-        if(uiState.generalError) {
-            TaskComponentError.showRow(uiState.generalErrorText)
-        }
+            TasksComponentButton.show("New",
+                Color(0xFFe51d2e),
+                110.dp,
+                onClick = {
+                    onNavigate("new")
+                } )
+        }//Row
     }
 }
