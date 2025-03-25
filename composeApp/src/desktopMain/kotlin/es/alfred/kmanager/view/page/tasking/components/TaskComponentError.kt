@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
@@ -18,10 +17,8 @@ import mu.KotlinLogging
  */
 object TaskComponentError {
 
-    private val logger = KotlinLogging.logger {}
-
     @Composable
-    fun show(errorText: String) {
+    fun showRow(errorText: String) {
         Row(
             Modifier
                 .background(color = Color(0xFFf7f6ff))
@@ -29,7 +26,7 @@ object TaskComponentError {
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp).width(20.dp))
             Text(
                 errorText, color = Color.Red, style = TextStyle(
                     fontSize = 15.sp, color = Color.Red

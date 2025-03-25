@@ -8,11 +8,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import es.alfred.kmanager.view.page.tasking.components.*
+import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
+import es.alfred.kmanager.view.page.tasking.components.TasksComponentButton
+import es.alfred.kmanager.view.page.tasking.components.TasksComponentChip
+import es.alfred.kmanager.view.page.tasking.components.TasksComponentText
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
+import es.alfred.kmanager.view.shared.ComponentsConfDataFactory
 import mu.KotlinLogging
 
 /**
@@ -54,7 +57,9 @@ class TasksListSearch {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-            TasksComponentText.show(standardTextConf("", "Search text"),
+            val conf = ComponentsConfDataFactory.standardTextConf("","Search text")
+            conf.width = 0.6f
+            TasksComponentText.show(conf,
                                     onValueChange = {
                                         viewModel.updateTaskFieldSearch(it)
                                     })
@@ -77,12 +82,7 @@ class TasksListSearch {
         }//Row
 
         if(uiState.generalError) {
-            TaskComponentError.show(uiState.generalErrorText)
+            TaskComponentError.showRow(uiState.generalErrorText)
         }
-    }
-
-    @Composable
-    private fun standardTextConf(initialText: String, label: String): TasksComponentTextConf {
-        return TasksComponentTextConf(initialText, label,0.6f, 70.dp, 15.sp,false, 100)
     }
 }

@@ -8,11 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.alfred.kmanager.view.page.tasking.components.*
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
+import es.alfred.kmanager.view.shared.ComponentsConfDataFactory
 import es.alfred.kmanager.view.shared.DialogDatePickerView
 import mu.KotlinLogging
 
@@ -25,12 +25,12 @@ class TasksDetailsForm {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun showRow(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
+    fun showSection(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val confName = standardTextConf("", "Name")
+        val confName = ComponentsConfDataFactory.standardTextConf("", "Name")
         confName.width = 0.45f
-        val confJira = standardTextConf("", "Jira")
+        val confJira = ComponentsConfDataFactory.standardTextConf("", "Jira")
         confJira.width = 0.81f
         rowOfText2(confName,
                    confJira,
@@ -41,14 +41,15 @@ class TasksDetailsForm {
                        viewModel.updateTaskJira(it)
                    })
 
-        val confDesc = standardBigTextConf("", "Description")
-        rowOfText(confDesc,onValueChange = {
-                               viewModel.updateTaskDesc(it)
-                           })
+        val confDesc = ComponentsConfDataFactory.standardBigTextConf("", "Description")
+        rowOfBigText(confDesc,
+                     onValueChange = {
+                        viewModel.updateTaskDesc(it)
+                     })
 
-        val confDateReq = standardTextConf(uiState.taskDateReqFormatted, "Request date")
+        val confDateReq = ComponentsConfDataFactory.standardTextConf(uiState.taskDateReqFormatted, "Request date")
         confDateReq.width = 0.45f
-        val confDateEnd = standardTextConf(uiState.taskDateEndFormatted, "Finish date")
+        val confDateEnd = ComponentsConfDataFactory.standardTextConf(uiState.taskDateEndFormatted, "Finish date")
         confDateEnd.width = 0.81f
         rowOfDatepicker2(confDateReq,
                          confDateEnd,
@@ -59,29 +60,31 @@ class TasksDetailsForm {
                              viewModel.onDateEndSelected(it)
                          })
 
-        val confBranches = standardBigTextConf("", "Branches")
+        val confBranches = ComponentsConfDataFactory.standardBigTextConf("", "Branches")
         confBranches.minLines = 1
         confBranches.maxLines = 2
-        rowOfText(confBranches, onValueChange = {
-                                    viewModel.updateTaskBranches(it)
-                                })
+        rowOfBigText(confBranches,
+                     onValueChange = {
+                        viewModel.updateTaskBranches(it)
+                     })
 
-        val confCommits = standardBigTextConf("", "Commits")
+        val confCommits = ComponentsConfDataFactory.standardBigTextConf("", "Commits")
         confBranches.minLines = 2
         confBranches.maxLines = 5
-        rowOfText(confCommits, onValueChange = {
-                                  viewModel.updateTaskCommits(it)
-                              })
+        rowOfBigText(confCommits,
+                     onValueChange = {
+                        viewModel.updateTaskCommits(it)
+                     })
 
-        val confNotes = standardBigTextConf("", "Notes")
-        rowOfText(confNotes, onValueChange = {
-                                 viewModel.updateTaskNotes(it)
-                             })
-
+        val confNotes = ComponentsConfDataFactory.standardBigTextConf("", "Notes")
+        rowOfBigText(confNotes,
+                     onValueChange = {
+                        viewModel.updateTaskNotes(it)
+                     })
     }
 
     @Composable
-    private fun rowOfText(conf: TasksComponentBigTextConf, onValueChange: (String) -> Unit) {
+    private fun rowOfBigText(conf: TasksComponentBigTextConf, onValueChange: (String) -> Unit) {
         Spacer(Modifier.height(5.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
         Row(Modifier
                 .background(color = Color(0xFFf7f6ff))
@@ -92,9 +95,9 @@ class TasksDetailsForm {
             Spacer(Modifier.width(20.dp))
 
             TasksComponentBigText.show(conf,
-                onValueChange = {
-                    onValueChange(it)
-                })
+                                       onValueChange = {
+                                           onValueChange(it)
+                                       })
         }
     }
 
@@ -104,25 +107,26 @@ class TasksDetailsForm {
                            onValueChangeA: (String) -> Unit,
                            onValueChangeB: (String) -> Unit) {
         Spacer(Modifier.height(5.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
+
         Row(Modifier
-            .background(color = Color(0xFFf7f6ff))
-            .fillMaxWidth(),
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
 
             TasksComponentText.show(confA,
-                onValueChange = {
-                    onValueChangeA(it)
-                })
+                                    onValueChange = {
+                                        onValueChangeA(it)
+                                    })
 
             Spacer(Modifier.width(10.dp))
 
             TasksComponentText.show(confB,
-                onValueChange = {
-                    onValueChangeB(it)
-                })
+                                    onValueChange = {
+                                        onValueChangeB(it)
+                                    })
         }
     }
 
@@ -138,8 +142,8 @@ class TasksDetailsForm {
         Spacer(Modifier.height(5.dp).background(color = Color(0xFFf7f6ff)).fillMaxWidth())
 
         Row(Modifier
-            .background(color = Color(0xFFf7f6ff))
-            .fillMaxWidth(),
+                .background(color = Color(0xFFf7f6ff))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -192,15 +196,5 @@ class TasksDetailsForm {
                                           onValueChangeB(it)
                                       })
         }
-    }
-
-    @Composable
-    private fun standardTextConf(initialText: String, label: String): TasksComponentTextConf {
-        return TasksComponentTextConf(initialText, label,0.9f, 65.dp, 14.sp,false, 100)
-    }
-
-    @Composable
-    private fun standardBigTextConf(initialText: String, label: String): TasksComponentBigTextConf {
-        return TasksComponentBigTextConf(initialText, label,0.9f, 65.dp, 14.sp,false, 1000, 5, 3)
     }
 }
