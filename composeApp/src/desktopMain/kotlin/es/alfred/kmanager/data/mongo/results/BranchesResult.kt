@@ -1,4 +1,4 @@
-package es.alfred.kmanager.data.mongo.entity
+package es.alfred.kmanager.data.mongo.results
 
 /**
  * @author Alfredo Sanz

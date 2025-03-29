@@ -10,11 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.view.page.tasking.components.*
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
 import es.alfred.kmanager.view.shared.ComponentsConfDataFactory
-import es.alfred.kmanager.view.shared.SelectData
 import mu.KotlinLogging
 
 /**
@@ -26,11 +24,13 @@ class TasksListSearch {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun showRow(onNavigate: (String) -> Unit,
-                viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
+    fun showSection(onNavigate: (String) -> Unit,
+                    viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
 
         logger.info { "showRow -> list: ${viewModel.uiState.value.taskStateList}" }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        viewModel.init()
 
         rowProjects()
         rowChips()
@@ -57,12 +57,15 @@ class TasksListSearch {
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val projectList: List<SelectData> =
-                    TheResources.getResources().projects.map { SelectData(it.name, it.label) }
-
-                val conf = ComponentsConfDataFactory.standardSelectConf("Project", "Project", projectList)
+                val conf = ComponentsConfDataFactory.standardSelectConf("Project",
+                                                                            "Project",
+                                                                                  viewModel.uiState.value.taskProjectList)
+                if(viewModel.uiState.value.currentProject != null) {
+                    conf.defaultValue = viewModel.uiState.value.currentProject!!
+                }
                 TasksComponentSelect.show(conf, onSelectChange = {
                     logger.info { "details -> onValueChange: $it" }
+                    viewModel.changeCurrentProject(it)
                 })
             }
         }//Row

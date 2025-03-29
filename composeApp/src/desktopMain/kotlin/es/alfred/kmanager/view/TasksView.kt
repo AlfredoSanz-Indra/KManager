@@ -31,17 +31,19 @@ class TasksView() : IView {
                 kheaderMenu.createPage(onChangeView)
 
                 when (showView) {
-                    "new" -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK, onNavigate = {
-                        showView = it
-                    })
+                    "new" -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK,
+                                                    onNavigate = {
+                                                        showView = it
+                                                    })
 
-                    "update" -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK, onNavigate = {
-                        showView = it
-                    })
+                    "update" -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK,
+                                                       onNavigate = {
+                                                           showView = it
+                                                       })
 
                     "list" -> tasksList.createPage(onNavigate = {
-                        showView = it
-                    })
+                                                       showView = it
+                                                   })
                 }
             }
         }

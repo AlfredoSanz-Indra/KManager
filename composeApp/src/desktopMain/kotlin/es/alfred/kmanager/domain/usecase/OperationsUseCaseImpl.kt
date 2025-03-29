@@ -1,7 +1,7 @@
 package es.alfred.kmanager.domain.usecase
 
 import es.alfred.kmanager.core.di.DataFactory
-import es.alfred.kmanager.data.mongo.entity.ServerAlive
+import es.alfred.kmanager.data.mongo.results.ServerAlive
 import es.alfred.kmanager.domain.model.BooleanResult
 import es.alfred.kmanager.domain.model.ListResult
 import es.alfred.kmanager.domain.usecaseapi.OperationsUseCase
