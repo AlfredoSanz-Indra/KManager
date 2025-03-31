@@ -1,8 +1,8 @@
 package es.alfred.kmanager.view.page.tasking
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.alfred.kmanager.view.page.tasking.sections.TasksListSearch
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
@@ -18,11 +18,16 @@ class TasksList() {
     private val taskListSearch: TasksListSearch = TasksListSearch()
 
     @Composable
-    fun createPage(viewModel: TasksListViewModel = viewModel { TasksListViewModel() },
-                   onNavigate: (String) -> Unit) {
+    fun createPage(onNavigate: (String) -> Unit,
+                   flag: Boolean,
+                   viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
 
-        logger.info { "cretePage" }
-        logger.info { "showRow -> list: ${viewModel.uiState.value.taskStateList}" }
+        logger.info { "TasksList -> cretePage" }
+        val isInitialized = remember { mutableStateOf(false) }
+
+        if(flag != isInitialized.value) {
+            viewModel.init()
+        }
 
         taskListSearch.showSection(onNavigate)
     }

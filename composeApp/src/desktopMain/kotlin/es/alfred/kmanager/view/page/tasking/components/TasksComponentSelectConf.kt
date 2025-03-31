@@ -2,7 +2,7 @@ package es.alfred.kmanager.view.page.tasking.components
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import es.alfred.kmanager.view.shared.SelectData
+import es.alfred.kmanager.domain.model.SelectData
 
 /**
  * @author Alfredo Sanz
@@ -14,4 +14,5 @@ data class TasksComponentSelectConf(val selectList: List<SelectData>,
                                     var width: Dp,
                                     var heigth: Dp,
                                     var fontSize: TextUnit,
-                                    var defaultValue: SelectData)
+                                    var defaultValue: SelectData
+)

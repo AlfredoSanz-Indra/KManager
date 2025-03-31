@@ -33,10 +33,17 @@ class TasksDetail {
     @Composable
     fun createPage(stateMode: TasksStateModeEnum,
                    onNavigate: (String) -> Unit,
+                   flag: Boolean,
                    viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val title = remember { mutableStateOf("No Task") }
+        val isInitialized = remember { mutableStateOf(false) }
+
+        if(flag != isInitialized.value) {
+            viewModel.init()
+            isInitialized.value = flag
+        }
 
         if(title.value == "No Task") {
             viewModel.setStateMode(stateMode)

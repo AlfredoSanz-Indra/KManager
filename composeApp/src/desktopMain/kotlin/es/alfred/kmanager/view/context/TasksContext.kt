@@ -1,9 +1,8 @@
-package es.alfred.kmanager.view.state
+package es.alfred.kmanager.view.context
 
 import es.alfred.kmanager.core.di.UseCaseFactory
-import es.alfred.kmanager.view.shared.SelectData
+import es.alfred.kmanager.domain.model.SelectData
 import kotlinx.coroutines.*
-import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
@@ -11,7 +10,6 @@ import mu.KotlinLogging
  */
 object TasksContext {
 
-    private val logger = KotlinLogging.logger {}
     private lateinit var currentProject: SelectData
 
     suspend fun getCurrentProject(): SelectData {
@@ -19,14 +17,10 @@ object TasksContext {
             val tasksContextUseCase = UseCaseFactory.getTasksContextUseCase()
 
             val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
-                logger.info { "getCurrentProject -> defer AA" }
                 return@async tasksContextUseCase.getCurrentProject()
             }
-            logger.info { "getCurrentProject -> defer BB" }
             currentProject = defer.await()
-            logger.info { "getCurrentProject -> defer BB2, currentProject: $currentProject" }
         }
-        logger.info { "getCurrentProject -> defer CC" }
         return currentProject
     }
 
@@ -34,10 +28,8 @@ object TasksContext {
         val tasksContextUseCase = UseCaseFactory.getTasksContextUseCase()
 
         val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
-            logger.info { "changeCurrentProject -> defer AA" }
             return@async tasksContextUseCase.insertUpdateCurrentProject(project)
         }
-        logger.info { "changeCurrentProject -> defer BB" }
         currentProject = defer.await()
 
         return currentProject

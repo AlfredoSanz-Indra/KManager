@@ -27,10 +27,7 @@ class TasksListSearch {
     fun showSection(onNavigate: (String) -> Unit,
                     viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
 
-        logger.info { "showRow -> list: ${viewModel.uiState.value.taskStateList}" }
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-        viewModel.init()
 
         rowProjects()
         rowChips()
@@ -43,6 +40,8 @@ class TasksListSearch {
 
     @Composable
     private fun rowProjects(viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
         Row(
             Modifier
                 .background(color = Color(0xFFf7f6ff))
@@ -59,9 +58,9 @@ class TasksListSearch {
             ) {
                 val conf = ComponentsConfDataFactory.standardSelectConf("Project",
                                                                             "Project",
-                                                                                  viewModel.uiState.value.taskProjectList)
-                if(viewModel.uiState.value.currentProject != null) {
-                    conf.defaultValue = viewModel.uiState.value.currentProject!!
+                                                                                 uiState.taskProjectList)
+                if(uiState.currentProject != null) {
+                    conf.defaultValue = uiState.currentProject!!
                 }
                 TasksComponentSelect.show(conf, onSelectChange = {
                     logger.info { "details -> onValueChange: $it" }

@@ -1,17 +1,23 @@
 package es.alfred.kmanager.view.page.tasking.viewmodel
 
 import androidx.lifecycle.ViewModel
+import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.core.util.DateTimeUtils
 import es.alfred.kmanager.core.validators.ChainTextValidator
 import es.alfred.kmanager.core.validators.DateGreaterValidator
 import es.alfred.kmanager.core.validators.TextValidatorLength
 import es.alfred.kmanager.core.validators.ValidatorResult
+import es.alfred.kmanager.domain.model.SelectData
+import es.alfred.kmanager.view.context.TasksContext
 import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.shared.ValidationResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 
 /**
@@ -21,6 +27,8 @@ import mu.KotlinLogging
 data class TasksDetailUiState(
     val taskStateList: List<String> = listOf("Pending", "Working", "Stopped", "Waiting", "Pushed", "Closed"),
     val taskStateSelectedList: MutableList<String> = mutableListOf(),
+    val taskProjectList: List<SelectData> = mutableListOf(),
+    var currentProject: SelectData? = null,
     var taskName: String = "",
     var taskJira: String = "",
     var taskDesc: String = "",
@@ -48,6 +56,20 @@ class TasksDetailViewModel: ViewModel(){
     private val _uiState = MutableStateFlow(TasksDetailUiState())
     val uiState: StateFlow<TasksDetailUiState> = _uiState.asStateFlow()
 
+    fun init() {
+        clearState()
+
+        if(uiState.value.taskProjectList.isEmpty()) {
+            updateTaskProjectList(TheResources.getResources().projects.map { SelectData(it.name, it.label) })
+        }
+
+        if(uiState.value.currentProject == null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                updateCurrentProject(TasksContext.getCurrentProject())
+            }
+        }
+    }
+
     fun setStateMode(stateMode: TasksStateModeEnum) {
         logger.info { "setStateMode ->  stateMode: $stateMode" }
         this.updateMode(stateMode.stateMode)
@@ -56,6 +78,10 @@ class TasksDetailViewModel: ViewModel(){
             TasksStateModeEnum.NEW_TASK -> creatingStateModeInit()
             else -> updatingStateModeInit()
         }
+    }
+
+    fun selectProject(project: SelectData) {
+        updateCurrentProject(project)
     }
 
     private fun creatingStateModeInit() {
@@ -133,27 +159,27 @@ class TasksDetailViewModel: ViewModel(){
         val valResultName = chainTxtShort.validate(uiState.value.taskName.trim())
 
         var valResultJira: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskJira.isNullOrBlank()) {
+        if(uiState.value.taskJira.isNotBlank()) {
             valResultJira = chainTxtShort.validate(uiState.value.taskJira.trim())
         }
 
         var valResultDesc: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskDesc.trim().isNullOrBlank()) {
+        if(uiState.value.taskDesc.trim().isNotBlank()) {
             valResultDesc = chainTxtLong.validate(uiState.value.taskDesc.trim())
         }
 
         var valResultCommits: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskCommits.trim().isNullOrBlank()) {
+        if(uiState.value.taskCommits.trim().isNotBlank()) {
             valResultCommits = chainTxtLong.validate(uiState.value.taskCommits.trim())
         }
 
         var valResultBranches: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskBranches.trim().isNullOrBlank()) {
+        if(uiState.value.taskBranches.trim().isNotBlank()) {
             valResultBranches = chainTxtLong.validate(uiState.value.taskBranches.trim())
         }
 
         var valResultNotes: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskNotes.trim().isNullOrBlank()) {
+        if(uiState.value.taskNotes.trim().isNotBlank()) {
             valResultNotes = chainTxtLong.validate(uiState.value.taskNotes.trim())
         }
 
@@ -203,7 +229,17 @@ class TasksDetailViewModel: ViewModel(){
         return result
     }
 
+    private fun updateTaskProjectList(projectList: List<SelectData>) {
+        _uiState.update {
+            it.copy(taskProjectList = projectList)
+        }
+    }
 
+    private fun updateCurrentProject(currentProject: SelectData?) {
+        _uiState.update {
+            it.copy(currentProject = currentProject)
+        }
+    }
 
     private fun updateMode(num: Int) {
         logger.info { "updateMode -> num: $num" }
@@ -213,7 +249,6 @@ class TasksDetailViewModel: ViewModel(){
     }
 
     private fun updateTitle(txt: String) {
-        logger.info { "updateTitle -> txt: $txt" }
         _uiState.update {
             it.copy(title = txt)
         }
@@ -256,13 +291,11 @@ class TasksDetailViewModel: ViewModel(){
         }
     }
     fun updateShowTaskDateReqDialog(action: Boolean) {
-        logger.info { "updateShowTaskDateReqDialog -> action: $action" }
         _uiState.update {
             it.copy(showTaskDateReqDialog = action)
         }
     }
     fun updateShowTaskDateEndDialog(action: Boolean) {
-        logger.info { "updateShowTaskDateEndDialog -> action: $action" }
         _uiState.update {
             it.copy(showTaskDateEndDialog = action)
         }
@@ -297,6 +330,9 @@ class TasksDetailViewModel: ViewModel(){
 
     private fun clearState() {
         updateTitle("")
+        _uiState.value.taskStateSelectedList.clear()
+        updateCurrentProject(null)
+        updateTaskProjectList(mutableListOf())
         updateTaskName("")
         updateTaskCommits("")
         updateTaskNotes("")
@@ -305,7 +341,6 @@ class TasksDetailViewModel: ViewModel(){
         updateTaskDateEnd(0, "")
         updateTaskJira("")
         updateTaskBranches("")
-        _uiState.value.taskStateSelectedList.clear()
         clearErrors()
     }
 

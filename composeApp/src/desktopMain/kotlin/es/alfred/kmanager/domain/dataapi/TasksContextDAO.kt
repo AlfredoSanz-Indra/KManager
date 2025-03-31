@@ -1,6 +1,6 @@
 package es.alfred.kmanager.domain.dataapi
 
-import es.alfred.kmanager.data.mongo.entity.ContextProject
+import es.alfred.kmanager.data.mongo.entity.Context
 import es.alfred.kmanager.data.mongo.results.TasksContextResult
 
 /**
@@ -9,7 +9,7 @@ import es.alfred.kmanager.data.mongo.results.TasksContextResult
  */
 interface TasksContextDAO {
 
-    suspend fun upsertTasksContextProject(contextProject: ContextProject): TasksContextResult
+    suspend fun upsertTasksContextProject(context: Context): TasksContextResult
 
     suspend fun getTasksContextCurrentProject(): TasksContextResult
 }

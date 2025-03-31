@@ -23,7 +23,7 @@ class TasksView() : IView {
 
     @Composable
     override fun createView(onChangeView: (String) -> Unit) {
-        logger.info { "createView" }
+        logger.info { "TasksView -> createView" }
         var showView: String by remember { mutableStateOf("list") }
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {
@@ -34,16 +34,19 @@ class TasksView() : IView {
                     "new" -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK,
                                                     onNavigate = {
                                                         showView = it
-                                                    })
+                                                    },
+                                                true)
 
                     "update" -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK,
                                                        onNavigate = {
                                                            showView = it
-                                                       })
+                                                       },
+                                                       true)
 
                     "list" -> tasksList.createPage(onNavigate = {
                                                        showView = it
-                                                   })
+                                                   },
+                                                   true)
                 }
             }
         }
