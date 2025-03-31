@@ -25,6 +25,6 @@ object ComponentsConfDataFactory {
 
     @Composable
     fun standardSelectConf(initialText: String, label: String, selectList: List<SelectData>): TasksComponentSelectConf {
-        return TasksComponentSelectConf(selectList,initialText, label, 400.dp, 65.dp, 14.sp)
+        return TasksComponentSelectConf(selectList,initialText, label, 400.dp, 65.dp, 14.sp, SelectData("",""))
     }
 }

@@ -63,7 +63,7 @@ fun main() = application {
     var action by remember { mutableStateOf(actionFrontales) }
 
     Window(onCloseRequest = ::exitApplication,
-        title = "KManager 1.1.6",
+        title = "KManager 1.1.7",
         state = rememberWindowState(width = 850.dp, height = 900.dp)
     ) {
         MenuBar {

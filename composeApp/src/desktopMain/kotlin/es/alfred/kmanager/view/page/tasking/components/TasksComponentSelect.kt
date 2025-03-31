@@ -29,9 +29,9 @@ object TasksComponentSelect {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun show(conf: TasksComponentSelectConf, onSelectChange: (String) -> Unit) {
+    fun show(conf: TasksComponentSelectConf, onSelectChange: (SelectData) -> Unit) {
         var isExpanded by remember { mutableStateOf(false) }
-        var selectedElement by remember { mutableStateOf( SelectData("", "") ) }
+        var selectedElement by remember { mutableStateOf( conf.defaultValue ) }
 
         ExposedDropdownMenuBox(
             expanded = isExpanded,
@@ -120,7 +120,7 @@ object TasksComponentSelect {
                         onClick = {
                             isExpanded = false
                             selectedElement = it
-                            onSelectChange(it.name)
+                            onSelectChange(it)
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )

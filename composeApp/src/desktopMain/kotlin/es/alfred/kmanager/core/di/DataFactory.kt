@@ -3,11 +3,11 @@ package es.alfred.kmanager.core.di
 import es.alfred.kmanager.data.ant.AntCommandsImpl
 import es.alfred.kmanager.data.mongo.BranchesDAOImpl
 import es.alfred.kmanager.data.mongo.MongoDAOImpl
+import es.alfred.kmanager.data.mongo.TasksContextDAOImpl
 import es.alfred.kmanager.domain.dataapi.AntCommands
 import es.alfred.kmanager.domain.dataapi.BranchesDAO
 import es.alfred.kmanager.domain.dataapi.MongoDAO
-import es.alfred.kmanager.domain.usecase.AntUseCaseImpl
-import es.alfred.kmanager.domain.usecaseapi.AntUseCase
+import es.alfred.kmanager.domain.dataapi.TasksContextDAO
 
 /**
  * @author Alfredo Sanz
@@ -18,6 +18,7 @@ object DataFactory {
     private lateinit var antCommand: AntCommands
     private lateinit var mongoDAO: MongoDAO
     private lateinit var branchesDAO: BranchesDAO
+    private lateinit var tasksContextDAO: TasksContextDAO
 
     fun getAntCommands(): AntCommands {
         if (!this::antCommand.isInitialized) {
@@ -39,4 +40,12 @@ object DataFactory {
         }
         return this.branchesDAO
     }
+
+    fun getTasksContextDAO(): TasksContextDAO {
+        if (!this::tasksContextDAO.isInitialized) {
+            this.tasksContextDAO = TasksContextDAOImpl()
+        }
+        return this.tasksContextDAO
+    }
+
 }

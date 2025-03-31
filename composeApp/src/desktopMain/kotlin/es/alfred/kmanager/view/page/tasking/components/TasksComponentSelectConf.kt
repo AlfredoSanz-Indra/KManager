@@ -13,4 +13,5 @@ data class TasksComponentSelectConf(val selectList: List<SelectData>,
                                     var label: String,
                                     var width: Dp,
                                     var heigth: Dp,
-                                    var fontSize: TextUnit)
+                                    var fontSize: TextUnit,
+                                    var defaultValue: SelectData)

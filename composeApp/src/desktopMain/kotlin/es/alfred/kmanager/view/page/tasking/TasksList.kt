@@ -23,8 +23,7 @@ class TasksList() {
 
         logger.info { "cretePage" }
         logger.info { "showRow -> list: ${viewModel.uiState.value.taskStateList}" }
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        taskListSearch.showRow(onNavigate)
+        taskListSearch.showSection(onNavigate)
     }
 }

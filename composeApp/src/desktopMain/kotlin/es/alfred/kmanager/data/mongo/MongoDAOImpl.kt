@@ -1,19 +1,13 @@
 package es.alfred.kmanager.data.mongo
 
 import com.mongodb.MongoException
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.Updates
 import es.alfred.kmanager.core.db.mongo.MongoConn
 import es.alfred.kmanager.core.resources.TheResources
-import es.alfred.kmanager.data.mongo.entity.Branches
-import es.alfred.kmanager.data.mongo.entity.BranchesResult
-import es.alfred.kmanager.data.mongo.entity.ServerAlive
+import es.alfred.kmanager.data.mongo.results.ServerAlive
 import es.alfred.kmanager.domain.dataapi.MongoDAO
-import es.alfred.kmanager.domain.model.InsertResult
 import mu.KotlinLogging
 import org.bson.BsonInt64
 import org.bson.Document
-import org.bson.types.ObjectId
 
 /**
  * @author Alfredo Sanz

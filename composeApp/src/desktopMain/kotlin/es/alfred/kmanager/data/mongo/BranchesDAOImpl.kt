@@ -6,9 +6,9 @@ import com.mongodb.client.model.Updates
 import es.alfred.kmanager.core.db.mongo.MongoConn
 import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.data.mongo.entity.Branches
-import es.alfred.kmanager.data.mongo.entity.BranchesResult
+import es.alfred.kmanager.data.mongo.results.BranchesResult
 import es.alfred.kmanager.domain.dataapi.BranchesDAO
-import es.alfred.kmanager.domain.model.InsertResult
+import es.alfred.kmanager.data.mongo.results.InsertResult
 import mu.KotlinLogging
 import org.bson.Document
 import org.bson.types.ObjectId
