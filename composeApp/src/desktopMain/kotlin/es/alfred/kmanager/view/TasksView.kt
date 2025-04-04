@@ -9,6 +9,7 @@ import es.alfred.kmanager.view.page.tasking.TasksDetail
 import es.alfred.kmanager.view.page.tasking.TasksList
 import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.shared.KHeaderMenu
+import es.alfred.kmanager.view.shared.Navigation
 import mu.KotlinLogging
 
 /**
@@ -24,29 +25,29 @@ class TasksView() : IView {
     @Composable
     override fun createView(onChangeView: (String) -> Unit) {
         logger.info { "TasksView -> createView" }
-        var showView: String by remember { mutableStateOf("list") }
+        var showView: String by remember { mutableStateOf(Navigation.TASKVIEW_LIST) }
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {
             Column {
                 kheaderMenu.createPage(onChangeView)
 
                 when (showView) {
-                    "new" -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK,
-                                                    onNavigate = {
-                                                        showView = it
-                                                    },
-                                                true)
+                    Navigation.TASKVIEW_NEW -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK,
+                                                                      onNavigate = {
+                                                                          showView = it
+                                                                      },
+                                                                     true)
 
-                    "update" -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK,
-                                                       onNavigate = {
-                                                           showView = it
-                                                       },
-                                                       true)
+                    Navigation.TASKVIEW_UPDATE -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK,
+                                                                         onNavigate = {
+                                                                             showView = it
+                                                                         },
+                                                                         true)
 
-                    "list" -> tasksList.createPage(onNavigate = {
-                                                       showView = it
-                                                   },
-                                                   true)
+                    Navigation.TASKVIEW_LIST -> tasksList.createPage(onNavigate = {
+                                                                         showView = it
+                                                                     },
+                                                                     true)
                 }
             }
         }

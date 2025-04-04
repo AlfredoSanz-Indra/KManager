@@ -2,15 +2,18 @@ package es.alfred.kmanager.data.mongo.entity
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
+
 
 /**
  * @author Alfredo Sanz
  * @time 2025
  */
-data class Context (
+@Serializable
+data class MngBranches(
     @SerialName("_id") // Use this annotation instead of @BsonId
-    @Contextual
-    var id: ObjectId?,
-    var project: ContextProject?
+    @Contextual val id: ObjectId?,
+    val project: String,
+    val branches: List<String>?
 )

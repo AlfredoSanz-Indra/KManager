@@ -14,6 +14,7 @@ import es.alfred.kmanager.view.page.tasking.components.TasksComponentButton
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentSelect
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
 import es.alfred.kmanager.view.shared.ComponentsConfDataFactory
+import es.alfred.kmanager.view.shared.Navigation
 import mu.KotlinLogging
 
 /**
@@ -106,7 +107,7 @@ class TasksDetailActionsRow {
                 Color(0xFFe51d2e),
                 110.dp,
                 onClick = {
-                    onNavigate("list")
+                    onNavigate(Navigation.TASKVIEW_LIST)
                 })
 
             Spacer(Modifier.width(20.dp))

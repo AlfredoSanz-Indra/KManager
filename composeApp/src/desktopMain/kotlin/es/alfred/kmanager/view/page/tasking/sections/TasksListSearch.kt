@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import es.alfred.kmanager.view.page.tasking.components.*
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
 import es.alfred.kmanager.view.shared.ComponentsConfDataFactory
+import es.alfred.kmanager.view.shared.Navigation
 import mu.KotlinLogging
 
 /**
@@ -124,7 +125,7 @@ class TasksListSearch {
                 Color(0xFFe51d2e),
                 110.dp,
                 onClick = {
-                    onNavigate("new")
+                    onNavigate(Navigation.TASKVIEW_NEW)
                 } )
         }//Row
     }

@@ -6,8 +6,8 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import es.alfred.kmanager.core.db.mongo.MongoConn
 import es.alfred.kmanager.core.resources.TheResources
-import es.alfred.kmanager.data.mongo.entity.Context
-import es.alfred.kmanager.data.mongo.entity.ContextProject
+import es.alfred.kmanager.data.mongo.entity.MngContext
+import es.alfred.kmanager.data.mongo.entity.MngContextProject
 import es.alfred.kmanager.data.mongo.results.TasksContextResult
 import es.alfred.kmanager.domain.dataapi.TasksContextDAO
 import mu.KotlinLogging
@@ -22,7 +22,7 @@ class TasksContextDAOImpl : TasksContextDAO {
     private val logger = KotlinLogging.logger {}
 
 
-    override suspend fun upsertTasksContextProject(context: Context): TasksContextResult {
+    override suspend fun upsertTasksContextProject(context: MngContext): TasksContextResult {
         logger.info { "upsertTasksContextProject -> contextProject: $context" }
         var result = TasksContextResult("", false, mutableMapOf())
 
@@ -61,10 +61,10 @@ class TasksContextDAOImpl : TasksContextDAO {
 
             val queryParam = Filters.eq("project.time", "current")
 
-            collection.find<Context>(filter = queryParam).limit(1).collect {
+            collection.find<MngContext>(filter = queryParam).limit(1).collect {
                 if(it.project != null) {
-                    val project = ContextProject( it.project!!.name, it.project!!.label, it.project!!.time)
-                    val context = Context(it.id, project)
+                    val project = MngContextProject( it.project!!.name, it.project!!.label, it.project!!.time)
+                    val context = MngContext(it.id, project)
                     result.id = it.id.toString()
                     result.data["context"] = context
                     result.result = true

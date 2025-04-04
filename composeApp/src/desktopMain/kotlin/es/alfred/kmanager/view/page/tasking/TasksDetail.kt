@@ -17,6 +17,7 @@ import es.alfred.kmanager.view.page.tasking.sections.TasksDetailStatesRow
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailsForm
 import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
+import es.alfred.kmanager.view.shared.Navigation
 import mu.KotlinLogging
 
 /**
@@ -50,6 +51,10 @@ class TasksDetail {
             title.value = uiState.title
         }
         TasksComponentTitle.show(uiState.title)
+
+        if(uiState.saveAction == true) {
+            onNavigate(Navigation.TASKVIEW_LIST)
+        }
 
         tasksDetailActionsRow.showSection(onNavigate)
         if(uiState.generalError) {

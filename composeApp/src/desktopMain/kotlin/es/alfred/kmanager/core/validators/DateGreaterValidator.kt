@@ -16,7 +16,7 @@ class DateGreaterValidator {
 
         validatorResult = when {
             results.contains(3) -> {
-                ValidatorResult.Error("The End time must be greater than Start time")
+                ValidatorResult.Error("End date must be greater than Start date")
             }
             else ->
                 ValidatorResult.Success

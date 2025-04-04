@@ -4,10 +4,8 @@ import es.alfred.kmanager.data.ant.AntCommandsImpl
 import es.alfred.kmanager.data.mongo.BranchesDAOImpl
 import es.alfred.kmanager.data.mongo.MongoDAOImpl
 import es.alfred.kmanager.data.mongo.TasksContextDAOImpl
-import es.alfred.kmanager.domain.dataapi.AntCommands
-import es.alfred.kmanager.domain.dataapi.BranchesDAO
-import es.alfred.kmanager.domain.dataapi.MongoDAO
-import es.alfred.kmanager.domain.dataapi.TasksContextDAO
+import es.alfred.kmanager.data.mongo.TasksDAOImpl
+import es.alfred.kmanager.domain.dataapi.*
 
 /**
  * @author Alfredo Sanz
@@ -19,6 +17,7 @@ object DataFactory {
     private lateinit var mongoDAO: MongoDAO
     private lateinit var branchesDAO: BranchesDAO
     private lateinit var tasksContextDAO: TasksContextDAO
+    private lateinit var tasksDAO: TasksDAO
 
     fun getAntCommands(): AntCommands {
         if (!this::antCommand.isInitialized) {
@@ -48,4 +47,10 @@ object DataFactory {
         return this.tasksContextDAO
     }
 
+    fun getTasksDAO(): TasksDAO {
+        if (!this::tasksDAO.isInitialized) {
+            this.tasksDAO = TasksDAOImpl()
+        }
+        return this.tasksDAO
+    }
 }
