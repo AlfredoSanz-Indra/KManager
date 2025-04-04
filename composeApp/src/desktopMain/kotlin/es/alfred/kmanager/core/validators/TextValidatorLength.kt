@@ -12,13 +12,13 @@ class TextValidatorLength(val minLength: Int? = null,
     override fun validate(theText: String): ValidatorResult {
         validatorResult = when {
             theText.isEmpty() || theText.trim().isEmpty()            ->
-                ValidatorResult.Error("The field value cannot be empty")
+                ValidatorResult.Error("cannot be empty")
 
             minLength != null && theText.trim().length < minLength ->
-                ValidatorResult.Error("The field value must have $minLength chars at least")
+                ValidatorResult.Error("cannot have a length of less than $minLength chars")
 
             maxLength != null && theText.trim().length > maxLength ->
-                ValidatorResult.Error("The field value cannot have more than $maxLength chars")
+                ValidatorResult.Error("may not be longer than $maxLength chars")
 
             else ->
                 ValidatorResult.Success

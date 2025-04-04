@@ -1,17 +1,25 @@
 package es.alfred.kmanager.view.page.tasking.viewmodel
 
 import androidx.lifecycle.ViewModel
+import es.alfred.kmanager.core.di.UseCaseFactory
+import es.alfred.kmanager.core.resources.TheResources
 import es.alfred.kmanager.core.util.DateTimeUtils
 import es.alfred.kmanager.core.validators.ChainTextValidator
 import es.alfred.kmanager.core.validators.DateGreaterValidator
 import es.alfred.kmanager.core.validators.TextValidatorLength
 import es.alfred.kmanager.core.validators.ValidatorResult
+import es.alfred.kmanager.domain.model.SelectData
+import es.alfred.kmanager.domain.model.Task
+import es.alfred.kmanager.view.context.TasksContext
 import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.shared.ValidationResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 
 /**
@@ -21,25 +29,28 @@ import mu.KotlinLogging
 data class TasksDetailUiState(
     val taskStateList: List<String> = listOf("Pending", "Working", "Stopped", "Waiting", "Pushed", "Closed"),
     val taskStateSelectedList: MutableList<String> = mutableListOf(),
+    val taskProjectList: List<SelectData> = mutableListOf(),
+    var currentProject: SelectData? = null,
     var taskName: String = "",
     var taskJira: String = "",
     var taskDesc: String = "",
     var taskNotes: String = "",
     var taskBranches: String = "",
     var taskCommits: String = "",
-    var taskDateReq: Long = 0,
+    var taskDateReq: Long = 0L,
     var taskDateReqFormatted: String = "",
-    var taskDateEnd: Long = 0,
+    var taskDateEnd: Long = 0L,
     var taskDateEndFormatted: String = "",
     var generalError: Boolean = false,
     var generalErrorText: String = "",
     val title: String = "No Task",
     var mode: Int = 1,
+    var saveAction: Boolean = false,
     var showTaskDateReqDialog: Boolean = false,
     var showTaskDateEndDialog: Boolean = false,
 )
 
-val taskShort_MAXLENGTH = 50
+val taskShort_MAXLENGTH = 100
 val taskLong_MAXLENGTH = 1000
 
 
@@ -47,6 +58,20 @@ class TasksDetailViewModel: ViewModel(){
     private val logger = KotlinLogging.logger {}
     private val _uiState = MutableStateFlow(TasksDetailUiState())
     val uiState: StateFlow<TasksDetailUiState> = _uiState.asStateFlow()
+
+    fun init() {
+        clearState()
+
+        if(uiState.value.taskProjectList.isEmpty()) {
+            updateTaskProjectList(TheResources.getResources().projects.map { SelectData(it.name, it.label) })
+        }
+
+        if(uiState.value.currentProject == null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                updateCurrentProject(TasksContext.getCurrentProject())
+            }
+        }
+    }
 
     fun setStateMode(stateMode: TasksStateModeEnum) {
         logger.info { "setStateMode ->  stateMode: $stateMode" }
@@ -56,6 +81,10 @@ class TasksDetailViewModel: ViewModel(){
             TasksStateModeEnum.NEW_TASK -> creatingStateModeInit()
             else -> updatingStateModeInit()
         }
+    }
+
+    fun selectProject(project: SelectData) {
+        updateCurrentProject(project)
     }
 
     private fun creatingStateModeInit() {
@@ -105,23 +134,57 @@ class TasksDetailViewModel: ViewModel(){
 
     fun save() {
         logger.info { "save" }
+        val tasksUseCase = UseCaseFactory.getTasksUseCase()
 
         val validateResult = validateForm()
         if(!validateResult.result) {
             logger.info { "save -> Error validating: ${validateResult.message}" }
-            updateGeneralError(true, validateResult.message)
+            updateGeneralError(true, "The field ${validateResult.field} ${validateResult.message}")
             return
         }
         logger.info { "save ->  validation success" }
 
+        val task: Task = createTaskObj()
+        logger.info { "save -> task: $task" }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = tasksUseCase.saveTask(task)
+            updateSaveAction(true)
+            logger.info { "save -> result: $result" }
+        }
 
     }
 
+    private fun createTaskObj(): Task {
+        val result = Task(
+            null,
+            uiState.value.currentProject!!.name,
+            uiState.value.taskStateSelectedList,
+            uiState.value.taskName,
+            if(uiState.value.taskJira.isNotBlank()) uiState.value.taskJira.trim() else null,
+            if(uiState.value.taskDesc.isNotBlank()) uiState.value.taskDesc.trim() else null,
+            if(uiState.value.taskNotes.isNotBlank()) uiState.value.taskNotes.trim() else null,
+            if(uiState.value.taskBranches.isNotBlank()) uiState.value.taskBranches.trim() else null,
+            if(uiState.value.taskCommits.isNotBlank())uiState.value.taskCommits.trim() else null,
+            if(uiState.value.taskDateReq != 0L) uiState.value.taskDateReq else null,
+            if(uiState.value.taskDateEnd != 0L) uiState.value.taskDateEnd else null,
+            if(uiState.value.taskDateReq != 0L) DateTimeUtils.dateToYear(uiState.value.taskDateReq) else null,
+            if(uiState.value.taskDateReq != 0L) DateTimeUtils.dateToMonth(uiState.value.taskDateReq) else null,
+            if(uiState.value.taskDateReq != 0L) DateTimeUtils.dateToDay(uiState.value.taskDateReq) else null,
+            if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToYear(uiState.value.taskDateEnd) else null,
+            if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToMonth(uiState.value.taskDateEnd) else null,
+            if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToDay(uiState.value.taskDateEnd) else null,
+            DateTimeUtils.currentDate()
+        )
+
+        return result
+    }
 
     private fun validateForm(): ValidationResult {
         var result = ValidationResult(true, "", "")
         clearErrors()
 
+        //----VALIDATORS----
         val chainTxtShort = ChainTextValidator(
             TextValidatorLength(5, taskShort_MAXLENGTH)
         )
@@ -130,30 +193,31 @@ class TasksDetailViewModel: ViewModel(){
         )
         val dateValidator = DateGreaterValidator()
 
+        //----VALIDATIONS----
         val valResultName = chainTxtShort.validate(uiState.value.taskName.trim())
 
         var valResultJira: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskJira.isNullOrBlank()) {
+        if(uiState.value.taskJira.isNotBlank()) {
             valResultJira = chainTxtShort.validate(uiState.value.taskJira.trim())
         }
 
         var valResultDesc: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskDesc.trim().isNullOrBlank()) {
+        if(uiState.value.taskDesc.trim().isNotBlank()) {
             valResultDesc = chainTxtLong.validate(uiState.value.taskDesc.trim())
         }
 
         var valResultCommits: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskCommits.trim().isNullOrBlank()) {
+        if(uiState.value.taskCommits.trim().isNotBlank()) {
             valResultCommits = chainTxtLong.validate(uiState.value.taskCommits.trim())
         }
 
         var valResultBranches: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskBranches.trim().isNullOrBlank()) {
+        if(uiState.value.taskBranches.trim().isNotBlank()) {
             valResultBranches = chainTxtLong.validate(uiState.value.taskBranches.trim())
         }
 
         var valResultNotes: ValidatorResult = ValidatorResult.Success
-        if(!uiState.value.taskNotes.trim().isNullOrBlank()) {
+        if(uiState.value.taskNotes.trim().isNotBlank()) {
             valResultNotes = chainTxtLong.validate(uiState.value.taskNotes.trim())
         }
 
@@ -167,72 +231,79 @@ class TasksDetailViewModel: ViewModel(){
                                                    DateTimeUtils.dateToDay(uiState.value.taskDateEnd))
         }
 
-        if(uiState.value.taskStateSelectedList.size == 0) {
-            result = ValidationResult(false, "States", "You must select one State at least")
+        var valResultProject: ValidatorResult = ValidatorResult.Success
+        if(uiState.value.currentProject == null) {
+            valResultProject = ValidatorResult.Error("Project")
         }
 
+
+        //----CHECK VALIDATION RESULTS----
+        if(valResultProject is ValidatorResult.Error) {
+            result = ValidationResult(false, "Project", "must be selected")
+        }
+        if(uiState.value.taskStateSelectedList.size == 0) {
+            result = ValidationResult(false, "States", "must have at least one chip selected")
+        }
         if(valResultName is ValidatorResult.Error) {
-            result = ValidationResult(false, "Name", "Field Name required")
-            logger.info { "validateForm -> validate (Name) ERR: ${valResultName.message}" }
+            result = ValidationResult(false, "Name", valResultName.message)
         }
         if(valResultJira is ValidatorResult.Error) {
-            result = ValidationResult(false, "Jira", "Field Jira Must be 0 length or more than 5 length")
-            logger.info { "validateForm -> validate (Jira) ERR: ${valResultJira.message}" }
+            result = ValidationResult(false, "Jira", valResultJira.message)
         }
         if(valResultDesc is ValidatorResult.Error) {
-            result = ValidationResult(false, "Description", "Field Description Must be 0 length or more than 5 length")
-            logger.info { "validateForm -> validate (Desc) ERR: ${valResultDesc.message}" }
+            result = ValidationResult(false, "Description", valResultDesc.message)
         }
         if(valResultCommits is ValidatorResult.Error) {
-            result = ValidationResult(false, "Commits", "Field Commits Must be 0 length or more than 5 length")
-            logger.info { "validateForm -> validate (Commits) ERR: ${valResultCommits.message}" }
+            result = ValidationResult(false, "Commits", valResultCommits.message)
         }
         if(valResultBranches is ValidatorResult.Error) {
-            result = ValidationResult(false, "Branches", "Field Branches Must be 0 length or more than 5 length")
-            logger.info { "validateForm -> validate (Branches) ERR: ${valResultBranches.message}" }
+            result = ValidationResult(false, "Branches", valResultBranches.message)
         }
         if(valResultNotes is ValidatorResult.Error) {
-            result = ValidationResult(false, "Notes", "Field Notes Must be 0 length or more than 5 length")
-            logger.info { "validateForm -> validate (Notes) ERR: ${valResultNotes.message}" }
+            result = ValidationResult(false, "Notes", valResultNotes.message)
         }
         if(valResultTime is ValidatorResult.Error) {
-            result = ValidationResult(false, "Dates", "The start date must be before the end date ")
-            logger.info { "validateForm -> validate (Time) ERR: ${valResultTime.message}" }
+            result = ValidationResult(false, "Dates", valResultTime.message)
         }
 
         return result
     }
 
+    private fun updateTaskProjectList(projectList: List<SelectData>) {
+        _uiState.update {
+            it.copy(taskProjectList = projectList)
+        }
+    }
 
+    private fun updateCurrentProject(currentProject: SelectData?) {
+        _uiState.update {
+            it.copy(currentProject = currentProject)
+        }
+    }
 
     private fun updateMode(num: Int) {
-        logger.info { "updateMode -> num: $num" }
         _uiState.update {
             it.copy(mode = num)
         }
     }
 
     private fun updateTitle(txt: String) {
-        logger.info { "updateTitle -> txt: $txt" }
         _uiState.update {
             it.copy(title = txt)
         }
     }
 
     fun updateTaskName(txt: String) {
-        logger.info { "updateTaskName -> txt: $txt" }
         _uiState.update {
             it.copy(taskName = txt)
         }
     }
     fun updateTaskJira(txt: String) {
-        logger.info { "updateTaskJira -> txt: $txt" }
         _uiState.update {
             it.copy(taskJira = txt)
         }
     }
     fun updateTaskDesc(txt: String) {
-        logger.info { "updateTaskDesc -> txt: $txt" }
         _uiState.update {
             it.copy(taskDesc = txt)
         }
@@ -256,33 +327,34 @@ class TasksDetailViewModel: ViewModel(){
         }
     }
     fun updateShowTaskDateReqDialog(action: Boolean) {
-        logger.info { "updateShowTaskDateReqDialog -> action: $action" }
         _uiState.update {
             it.copy(showTaskDateReqDialog = action)
         }
     }
     fun updateShowTaskDateEndDialog(action: Boolean) {
-        logger.info { "updateShowTaskDateEndDialog -> action: $action" }
         _uiState.update {
             it.copy(showTaskDateEndDialog = action)
         }
     }
     fun updateTaskNotes(txt: String) {
-        logger.info { "updateTaskNotes -> txt: $txt" }
         _uiState.update {
             it.copy(taskNotes = txt)
         }
     }
     fun updateTaskBranches(txt: String) {
-        logger.info { "updateTaskBranches -> txt: $txt" }
         _uiState.update {
             it.copy(taskBranches = txt)
         }
     }
     fun updateTaskCommits(txt: String) {
-        logger.info { "updateTaskCommits -> txt: $txt" }
         _uiState.update {
             it.copy(taskCommits = txt)
+        }
+    }
+
+    private fun updateSaveAction(action: Boolean) {
+        _uiState.update {
+            it.copy(saveAction = action)
         }
     }
 
@@ -297,6 +369,9 @@ class TasksDetailViewModel: ViewModel(){
 
     private fun clearState() {
         updateTitle("")
+        _uiState.value.taskStateSelectedList.clear()
+        updateCurrentProject(null)
+        updateTaskProjectList(mutableListOf())
         updateTaskName("")
         updateTaskCommits("")
         updateTaskNotes("")
@@ -305,7 +380,7 @@ class TasksDetailViewModel: ViewModel(){
         updateTaskDateEnd(0, "")
         updateTaskJira("")
         updateTaskBranches("")
-        _uiState.value.taskStateSelectedList.clear()
+        updateSaveAction(false)
         clearErrors()
     }
 

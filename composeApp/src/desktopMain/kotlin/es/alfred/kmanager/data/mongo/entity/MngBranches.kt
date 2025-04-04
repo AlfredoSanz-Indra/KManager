@@ -11,7 +11,7 @@ import org.bson.types.ObjectId
  * @time 2025
  */
 @Serializable
-data class Branches(
+data class MngBranches(
     @SerialName("_id") // Use this annotation instead of @BsonId
     @Contextual val id: ObjectId?,
     val project: String,

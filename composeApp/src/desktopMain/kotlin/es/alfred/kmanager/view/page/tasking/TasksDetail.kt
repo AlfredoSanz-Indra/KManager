@@ -17,6 +17,7 @@ import es.alfred.kmanager.view.page.tasking.sections.TasksDetailStatesRow
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailsForm
 import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
+import es.alfred.kmanager.view.shared.Navigation
 import mu.KotlinLogging
 
 /**
@@ -33,16 +34,27 @@ class TasksDetail {
     @Composable
     fun createPage(stateMode: TasksStateModeEnum,
                    onNavigate: (String) -> Unit,
+                   flag: Boolean,
                    viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val title = remember { mutableStateOf("No Task") }
+        val isInitialized = remember { mutableStateOf(false) }
+
+        if(flag != isInitialized.value) {
+            viewModel.init()
+            isInitialized.value = flag
+        }
 
         if(title.value == "No Task") {
             viewModel.setStateMode(stateMode)
             title.value = uiState.title
         }
         TasksComponentTitle.show(uiState.title)
+
+        if(uiState.saveAction == true) {
+            onNavigate(Navigation.TASKVIEW_LIST)
+        }
 
         tasksDetailActionsRow.showSection(onNavigate)
         if(uiState.generalError) {

@@ -3,6 +3,7 @@ package es.alfred.kmanager.view.shared
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import es.alfred.kmanager.domain.model.SelectData
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentBigTextConf
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentSelectConf
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentTextConf

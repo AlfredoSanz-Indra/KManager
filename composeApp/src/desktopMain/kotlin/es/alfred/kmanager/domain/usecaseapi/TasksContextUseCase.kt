@@ -1,6 +1,6 @@
 package es.alfred.kmanager.domain.usecaseapi
 
-import es.alfred.kmanager.view.shared.SelectData
+import es.alfred.kmanager.domain.model.SelectData
 
 /**
  * @author Alfredo Sanz

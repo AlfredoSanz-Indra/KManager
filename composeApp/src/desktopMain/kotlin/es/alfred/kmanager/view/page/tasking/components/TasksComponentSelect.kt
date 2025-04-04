@@ -16,16 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import es.alfred.kmanager.view.shared.SelectData
-import mu.KotlinLogging
+import es.alfred.kmanager.domain.model.SelectData
 
 /**
  * @author Alfredo Sanz
  * @date 2025
  */
 object TasksComponentSelect {
-
-    private val logger = KotlinLogging.logger {}
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -40,7 +37,7 @@ object TasksComponentSelect {
             },
         ) {
             OutlinedTextField(
-                value = selectedElement.label,
+                value = conf.defaultValue.label,
                 modifier = Modifier
                                 .height(conf.heigth)
                                 .fillMaxWidth()

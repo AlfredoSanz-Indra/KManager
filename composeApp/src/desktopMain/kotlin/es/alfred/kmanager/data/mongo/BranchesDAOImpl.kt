@@ -5,10 +5,10 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import es.alfred.kmanager.core.db.mongo.MongoConn
 import es.alfred.kmanager.core.resources.TheResources
-import es.alfred.kmanager.data.mongo.entity.Branches
+import es.alfred.kmanager.data.mongo.entity.MngBranches
 import es.alfred.kmanager.data.mongo.results.BranchesResult
-import es.alfred.kmanager.domain.dataapi.BranchesDAO
 import es.alfred.kmanager.data.mongo.results.InsertResult
+import es.alfred.kmanager.domain.dataapi.BranchesDAO
 import mu.KotlinLogging
 import org.bson.Document
 import org.bson.types.ObjectId
@@ -76,11 +76,11 @@ class BranchesDAOImpl : BranchesDAO {
         try {
             val mongoClient = MongoConn.getClient()
             val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
-            val collection = database.getCollection<Branches>(collectionName = "branches")
+            val collection = database.getCollection<MngBranches>(collectionName = "branches")
 
             val queryParam = Filters.eq("project", project)
 
-            collection.find<Branches>(queryParam).limit(1).collect {
+            collection.find<MngBranches>(queryParam).limit(1).collect {
                 if(!it.branches.isNullOrEmpty()) {
                     result.branches = it.branches.map { it }
                 }

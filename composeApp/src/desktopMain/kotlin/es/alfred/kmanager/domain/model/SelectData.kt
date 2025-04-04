@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.shared
+package es.alfred.kmanager.domain.model
 
 /**
  * @author Alfredo Sanz

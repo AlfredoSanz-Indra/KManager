@@ -16,7 +16,7 @@ class TimeGreaterValidator {
 
         validatorResult = when {
             valResult == 3 -> {
-                ValidatorResult.Error("The End time must be greater than Start time")
+                ValidatorResult.Error("End time must be greater than Start time")
             }
             else ->
                 ValidatorResult.Success

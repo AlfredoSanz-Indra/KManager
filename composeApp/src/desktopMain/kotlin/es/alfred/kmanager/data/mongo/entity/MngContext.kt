@@ -8,10 +8,9 @@ import org.bson.types.ObjectId
  * @author Alfredo Sanz
  * @time 2025
  */
-data class ContextProject(
+data class MngContext (
     @SerialName("_id") // Use this annotation instead of @BsonId
     @Contextual
     var id: ObjectId?,
-    val name: String,
-    val label: String,
-    val project: String)
+    var project: MngContextProject?
+)
