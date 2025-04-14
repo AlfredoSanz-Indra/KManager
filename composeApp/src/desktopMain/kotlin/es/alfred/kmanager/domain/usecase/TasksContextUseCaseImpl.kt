@@ -17,6 +17,7 @@ class TasksContextUseCaseImpl: TasksContextUseCase {
     private val tasksContextDAO = DataFactory.getTasksContextDAO()
 
     override suspend fun getCurrentProject(): SelectData {
+        logger.info { "getCurrentProject" }
         var result = SelectData("", "")
 
         val resultDAO = tasksContextDAO.getTasksContextCurrentProject()
@@ -24,11 +25,11 @@ class TasksContextUseCaseImpl: TasksContextUseCase {
             val context = resultDAO.data["context"] as MngContext
             result = SelectData(context.project!!.name, context.project!!.label)
         }
-        logger.info { "getCurrentProject -> result: $result" }
         return result
     }
 
     override suspend fun insertUpdateCurrentProject(project: SelectData): SelectData {
+        logger.info { "insertUpdateCurrentProject -> project: $project" }
         var result = SelectData("", "")
 
         val contextProject = MngContextProject(project.name, project.label, "current")
@@ -38,7 +39,7 @@ class TasksContextUseCaseImpl: TasksContextUseCase {
             val context = resultDAO.data["context"] as MngContext
             result = SelectData(context.project!!.name, context.project!!.label)
         }
-        logger.info { "insertUpdateCurrentProject -> result: $result" }
+
         return result
     }
 }

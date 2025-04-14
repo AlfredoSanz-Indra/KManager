@@ -5,8 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -14,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentCardTask
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
+import es.alfred.kmanager.view.shared.KManagerDialog
 import mu.KotlinLogging
 
 /**
@@ -28,10 +28,7 @@ class TasksListCards {
     fun showSection(onNavigate: (String) -> Unit,
                     viewModel: TasksListViewModel = viewModel { TasksListViewModel() }
     ) {
-
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-        val tempList = mutableListOf("A", "B", "B", "B", "B", "B", "B", "B", "B", "B")
 
         Column(
             Modifier
@@ -51,17 +48,36 @@ class TasksListCards {
                         .fillMaxHeight()
                         .padding(horizontal = 10.dp, vertical = 2.dp)
                 ) {
+                    items(uiState.tasksList.size,
+                          itemContent = { item ->
 
-
-                    items( tempList.size, itemContent = { item ->
-                        val tempItem = tempList[item]
-
-                        TasksComponentCardTask.show(
-                            onEdit = { logger.info { "onEdit" } },
-                            onDelete = { logger.info { "onDelete" } })
+                        val thetask = uiState.tasksList[item]
+                        TasksComponentCardTask.show(thetask,
+                                                    onEdit = { logger.info { "onEdit" } },
+                                                    onDelete = {
+                                                        viewModel.showConfirmDelete(it) })
                     })
                 }//lazy
             }//Box
         }//column
+
+        dialogDelete()
+    }
+
+    @Composable
+    private fun dialogDelete(viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        if(uiState.flagShowConfirmDelete) {
+            KManagerDialog.confirmDialog("Proceed with Delete Task?",
+                uiState.flagShowConfirmDelete,
+                onAccept = {
+                    viewModel.hideConfirmDelete()
+                    viewModel.deleteTask()
+                },
+                onDecline = {
+                    viewModel.hideConfirmDelete()
+                })
+        }
     }
 }

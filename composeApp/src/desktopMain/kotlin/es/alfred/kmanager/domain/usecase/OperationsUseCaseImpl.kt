@@ -41,7 +41,6 @@ class OperationsUseCaseImpl : OperationsUseCase {
                branchesResult.branches.isNotEmpty() &&
                branchesResult.branches.contains(branchName) &&
                branchesResult.branches.indexOf(branchName) == 0) {
-
                 result.result = true
                 result.data = branchesResult.branches
             }
@@ -59,7 +58,6 @@ class OperationsUseCaseImpl : OperationsUseCase {
                 while(branches.size > 10) {
                     branches.removeLast()
                 }
-
                 val resp = when(doInsert) {
                     true  -> this.branchesDAO.addBranch(project, branches)
                     false -> this.branchesDAO.updateBranches(project, branches)
@@ -76,7 +74,6 @@ class OperationsUseCaseImpl : OperationsUseCase {
             result.result = false
         }
 
-        logger.info { "addBranch -> result.data: ${result.data}" }
         return result
     }
 
@@ -96,7 +93,6 @@ class OperationsUseCaseImpl : OperationsUseCase {
             result.result = false
         }
 
-        logger.info { "getBranches -> result.data: ${result.data}" }
         return result
     }
 }

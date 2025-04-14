@@ -2,8 +2,8 @@ package es.alfred.kmanager.domain.usecase
 
 import es.alfred.kmanager.core.di.DataFactory
 import es.alfred.kmanager.data.mongo.entity.MngTask
-import es.alfred.kmanager.domain.model.Task
-import es.alfred.kmanager.domain.model.TaskResult
+import es.alfred.kmanager.data.mongo.model.MgFilterTask
+import es.alfred.kmanager.domain.model.*
 import es.alfred.kmanager.domain.usecaseapi.TasksUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,22 +17,36 @@ import mu.KotlinLogging
 class TasksUseCaseImpl: TasksUseCase {
     private val logger = KotlinLogging.logger {}
 
+    override suspend fun deleteTask(id: String): BooleanResult {
+        logger.info { "deleteTask -> id: $id" }
+        var result = BooleanResult(false)
+
+        if(!id.isNullOrBlank()) {
+            val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
+                return@async DataFactory.getTasksDAO().deleteTask(id)
+            }
+            val resp = defer.await()
+            if(resp.result) {
+                result = BooleanResult(true)
+            }
+        }
+        return result
+    }
+
     override suspend fun saveTask(task: Task): TaskResult {
         logger.info { "saveTask -> task: $task" }
-
         val result = if(task.id.isNullOrBlank()) {
                         saveNewTask(task)
                      }
                      else {
-                        TaskResult(false, null)
+                        saveExistingTask(task)
                      }
 
         return result
     }
 
     private suspend fun saveNewTask(task: Task): TaskResult {
-        logger.info { "saveNewTask -> task: $task" }
-
+        logger.info { "saveNewTask" }
         var result = TaskResult(false, null)
 
         val entity = mapToEntity(task)
@@ -47,8 +61,25 @@ class TasksUseCaseImpl: TasksUseCase {
         return result
     }
 
-    private suspend fun saveExistingTask(task: Task): Unit {
-        return Unit
+    private suspend fun saveExistingTask(task: Task): TaskResult {
+        return TaskResult(false, null)
+    }
+
+    override suspend fun getTasks(filterTasks: FilterTasks): TasksResult {
+        logger.info { "getTasks -> filterTasks: $filterTasks" }
+        val result = TasksResult(true, listOf())
+        val filter = mapToFilter(filterTasks)
+
+        val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
+            return@async DataFactory.getTasksDAO().getTasks(filter)
+        }
+        val resp = defer.await()
+        result.result = resp.result
+        if(resp.result) {
+            val resultList = resp.data.map { mapToModel(it)}
+            result.tasks = resultList
+        }
+        return result
     }
 
     private fun mapToEntity(task: Task): MngTask {
@@ -99,5 +130,17 @@ class TasksUseCaseImpl: TasksUseCase {
         )
 
         return result
+    }
+
+    private fun mapToFilter(filterTask: FilterTasks): MgFilterTask {
+        val filter = MgFilterTask(
+            project = filterTask.project,
+            states = filterTask.states,
+            name = filterTask.searchField,
+            description = filterTask.searchField,
+            notes = filterTask.searchField
+        )
+
+        return filter
     }
 }

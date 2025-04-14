@@ -90,6 +90,7 @@ object TasksComponentText {
                 IconButton(
                     onClick = {
                         textValue = TextFieldValue("")
+                        onValueChange("")
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Clear, contentDescription = null)

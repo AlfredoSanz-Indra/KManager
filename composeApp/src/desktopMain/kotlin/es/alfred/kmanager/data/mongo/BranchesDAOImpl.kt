@@ -1,6 +1,5 @@
 package es.alfred.kmanager.data.mongo
 
-import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import es.alfred.kmanager.core.db.mongo.MongoConn
@@ -37,11 +36,11 @@ class BranchesDAOImpl : BranchesDAO {
             val res = collection.insertOne(document)
             result.id = res.insertedId?.asObjectId()?.value.toString()
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "Error inserting branches -> $me" }
             result = InsertResult("", false)
         }
-        logger.info { "addBranch ->  result: $result" }
+        logger.info { "addBranch ->  result: ${result.result}" }
         return result
     }
 
@@ -61,11 +60,11 @@ class BranchesDAOImpl : BranchesDAO {
                 result.id = it.upsertedId?.asObjectId()?.value.toString()
             }
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "Error updating branches -> $me" }
             result = InsertResult("", false)
         }
-        logger.info { "updateBranches ->  result: $result" }
+        logger.info { "updateBranches ->  result: ${result.result}" }
         return result
     }
 
@@ -78,19 +77,19 @@ class BranchesDAOImpl : BranchesDAO {
             val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
             val collection = database.getCollection<MngBranches>(collectionName = "branches")
 
-            val queryParam = Filters.eq("project", project)
+            val filter = Filters.eq("project", project)
 
-            collection.find<MngBranches>(queryParam).limit(1).collect {
+            collection.find<MngBranches>(filter).limit(1).collect {
                 if(!it.branches.isNullOrEmpty()) {
                     result.branches = it.branches.map { it }
                 }
             }
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "Error requesting branches from Mongo -> $me" }
             result.result = false
         }
-        logger.info { "getBranches ->  result: $result" }
+        logger.info { "getBranches ->  result: ${result.result}" }
         return result
     }
 }

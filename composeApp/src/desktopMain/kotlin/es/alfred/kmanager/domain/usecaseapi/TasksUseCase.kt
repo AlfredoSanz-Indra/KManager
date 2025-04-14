@@ -1,7 +1,6 @@
 package es.alfred.kmanager.domain.usecaseapi
 
-import es.alfred.kmanager.domain.model.Task
-import es.alfred.kmanager.domain.model.TaskResult
+import es.alfred.kmanager.domain.model.*
 
 /**
  * @author Alfredo Sanz
@@ -10,4 +9,8 @@ import es.alfred.kmanager.domain.model.TaskResult
 interface TasksUseCase {
 
     suspend fun saveTask(task: Task): TaskResult
+
+    suspend fun getTasks(filterTasks: FilterTasks): TasksResult
+
+    suspend fun deleteTask(id: String): BooleanResult
 }

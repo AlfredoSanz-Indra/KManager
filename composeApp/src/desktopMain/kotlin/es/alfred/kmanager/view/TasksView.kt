@@ -17,14 +17,12 @@ import mu.KotlinLogging
  * @date 2025
  */
 class TasksView() : IView {
-    private val logger = KotlinLogging.logger {}
     private val kheaderMenu: KHeaderMenu = KHeaderMenu()
     private val tasksList: TasksList = TasksList()
     private val tasksDetail: TasksDetail = TasksDetail()
 
     @Composable
     override fun createView(onChangeView: (String) -> Unit) {
-        logger.info { "TasksView -> createView" }
         var showView: String by remember { mutableStateOf(Navigation.TASKVIEW_LIST) }
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {

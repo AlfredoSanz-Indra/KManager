@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
@@ -37,12 +38,12 @@ class TasksDetail {
                    flag: Boolean,
                    viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
 
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.STARTED)
         val title = remember { mutableStateOf("No Task") }
         val isInitialized = remember { mutableStateOf(false) }
-
         if(flag != isInitialized.value) {
             viewModel.init()
+            uiState.saveAction = false
             isInitialized.value = flag
         }
 
@@ -51,7 +52,6 @@ class TasksDetail {
             title.value = uiState.title
         }
         TasksComponentTitle.show(uiState.title)
-
         if(uiState.saveAction == true) {
             onNavigate(Navigation.TASKVIEW_LIST)
         }

@@ -28,9 +28,7 @@ class TasksList() {
                    flag: Boolean,
                    viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
 
-        logger.info { "TasksList -> cretePage" }
         val isInitialized = remember { mutableStateOf(false) }
-
         if(flag != isInitialized.value) {
             viewModel.init()
         }

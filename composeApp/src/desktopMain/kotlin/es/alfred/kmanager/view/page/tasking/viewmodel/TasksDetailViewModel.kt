@@ -74,7 +74,6 @@ class TasksDetailViewModel: ViewModel(){
     }
 
     fun setStateMode(stateMode: TasksStateModeEnum) {
-        logger.info { "setStateMode ->  stateMode: $stateMode" }
         this.updateMode(stateMode.stateMode)
 
         when(stateMode) {
@@ -93,18 +92,14 @@ class TasksDetailViewModel: ViewModel(){
     }
 
     private fun updatingStateModeInit() {
-        logger.info { "updatingStateModeInit" }
         updateTitle("Update Task")
     }
 
     fun addTaskStateToSelectedList(taskState: String) {
-        logger.info { "addTaskStateToSelectedList -> taskState: $taskState" }
-        logger.info { "addTaskStateToSelectedList -> taskStateSelectedList: ${_uiState.value.taskStateSelectedList}" }
         when(taskState.startsWith("N-")) {
             true -> _uiState.value.taskStateSelectedList.remove(taskState.substring(2))
             false -> _uiState.value.taskStateSelectedList.addLast(taskState)
         }
-        logger.info { "addTaskStateToSelectedList -> taskStateSelectedList: ${_uiState.value.taskStateSelectedList}" }
     }
 
     fun onDateReqSelected(dateInMill: Long) {
@@ -142,11 +137,8 @@ class TasksDetailViewModel: ViewModel(){
             updateGeneralError(true, "The field ${validateResult.field} ${validateResult.message}")
             return
         }
-        logger.info { "save ->  validation success" }
 
         val task: Task = createTaskObj()
-        logger.info { "save -> task: $task" }
-
         CoroutineScope(Dispatchers.IO).launch {
             val result = tasksUseCase.saveTask(task)
             updateSaveAction(true)
@@ -174,7 +166,7 @@ class TasksDetailViewModel: ViewModel(){
             if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToYear(uiState.value.taskDateEnd) else null,
             if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToMonth(uiState.value.taskDateEnd) else null,
             if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToDay(uiState.value.taskDateEnd) else null,
-            DateTimeUtils.currentDate()
+            DateTimeUtils.currentDateTime()
         )
 
         return result
@@ -368,6 +360,7 @@ class TasksDetailViewModel: ViewModel(){
     }
 
     private fun clearState() {
+        updateSaveAction(false)
         updateTitle("")
         _uiState.value.taskStateSelectedList.clear()
         updateCurrentProject(null)
@@ -380,7 +373,6 @@ class TasksDetailViewModel: ViewModel(){
         updateTaskDateEnd(0, "")
         updateTaskJira("")
         updateTaskBranches("")
-        updateSaveAction(false)
         clearErrors()
     }
 
