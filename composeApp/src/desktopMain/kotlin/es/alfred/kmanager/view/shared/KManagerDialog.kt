@@ -14,11 +14,11 @@ object KManagerDialog {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun confirmDialog(theText: String, openDialog: Boolean, onPush: () -> Unit, onDismissPush: () -> Unit) {
+    fun confirmDialog(theText: String, openDialog: Boolean, onAccept: () -> Unit, onDecline: () -> Unit) {
         if (openDialog) {
             BasicAlertDialog(
                 onDismissRequest = {
-                    onDismissPush()
+                    onDecline()
                 }
             ) {
                 Surface(
@@ -37,13 +37,13 @@ object KManagerDialog {
                             Spacer(modifier = Modifier.width(50.dp))
 
                             TextButton(
-                                onClick = { onDismissPush() },
+                                onClick = { onDecline() },
                             ) {
                                 Text("NO")
                             }
 
                             TextButton(
-                                onClick = { onPush() },
+                                onClick = { onAccept() },
                             ) {
                                 Text("YES")
                             }

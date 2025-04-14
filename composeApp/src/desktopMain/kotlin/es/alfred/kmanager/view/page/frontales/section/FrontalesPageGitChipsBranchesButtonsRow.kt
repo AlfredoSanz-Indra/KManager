@@ -37,17 +37,22 @@ class FrontalesPageGitChipsBranchesButtonsRow {
         if(flagOpenDialogConfirm) {
             KManagerDialog.confirmDialog("Proceed with Push?",
                                          flagOpenDialogConfirm,
-                                         onPush = {
+                                         onAccept = {
                                              flagOpenDialogConfirm = false
                                              flagDoPush = true
                                          },
-                                         onDismissPush = {
+                                         onDecline = {
                                             flagOpenDialogConfirm = false
                                          })
         }
         if(flagDoPush) {
-            flagDoPush = false
-            this.makePush(chipsSelected, branchName, onBranchesUpdate)
+            this.makePush(chipsSelected,
+                          branchName,
+                          onBranchesUpdate,
+                          onPushEnd = {
+                              flagDoPush = false
+                          })
+
         }
 
         gitChipsOperationRow(chipsSelected,
@@ -126,8 +131,8 @@ class FrontalesPageGitChipsBranchesButtonsRow {
                     coroutineScope.launch {
                         val defer = async(Dispatchers.IO) {
                             val chipsSelectedList = chips.keys.toList()
-                            antUseCase.gitCheckout(chipsSelectedList[0], branchName)
 
+                            antUseCase.gitCheckout(chipsSelectedList[0], branchName)
                             operationsUseCase.addBranch(chipsSelectedList[0], branchName)
                         }
                         defer.await()
@@ -178,7 +183,8 @@ class FrontalesPageGitChipsBranchesButtonsRow {
     @Composable
     private fun makePush(chipsSelected: MutableMap<String, Boolean>,
                          branchName: String,
-                         onBranchesUpdate: (Boolean) -> Unit) {
+                         onBranchesUpdate: (Boolean) -> Unit,
+                         onPushEnd: () -> Unit) {
         val coroutineScope = rememberCoroutineScope()
         val operationsUseCase: OperationsUseCase = UseCaseFactory.getOperationsUseCase()
         val antUseCase: AntUseCase = UseCaseFactory.getAntUseCase()
@@ -193,6 +199,7 @@ class FrontalesPageGitChipsBranchesButtonsRow {
             }
             defer.await()
             onBranchesUpdate(true)
+            onPushEnd()
         }
     }
 
@@ -206,7 +213,7 @@ class FrontalesPageGitChipsBranchesButtonsRow {
             logger.info { "Solo se puede seleccionar un proyecto para esta funcion" }
             result = false
         }
-        if (branchName.isBlank() || branchName.length < 10) {
+        if (branchName.isBlank() || branchName.length < 5) {
             logger.info { "Debe especificar un nombre de rama" }
             result = false
         }

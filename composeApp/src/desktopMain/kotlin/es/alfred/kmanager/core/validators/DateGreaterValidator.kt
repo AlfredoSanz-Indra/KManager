@@ -1,5 +1,7 @@
 package es.alfred.kmanager.core.validators
 
+import mu.KotlinLogging
+
 /**
  * @author Alfredo Sanz
  * @time 2025
@@ -15,11 +17,9 @@ class DateGreaterValidator {
         val results = listOf(valResult1, valResult2, valResult3)
 
         validatorResult = when {
-            results.contains(3) -> {
-                ValidatorResult.Error("End date must be greater than Start date")
-            }
-            else ->
-                ValidatorResult.Success
+            results[0] < 3 && results[1] == 1 -> ValidatorResult.Success
+            results[0] < 3 && results[1] == 2 && results[2] < 3 -> ValidatorResult.Success
+            else -> ValidatorResult.Error("End date must be greater than Start date")
         }
 
         return validatorResult

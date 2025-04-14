@@ -32,7 +32,6 @@ class FrontalesPageGitChipsButtonsRow {
 
     @Composable
     fun showRow(chipsSelected: MutableMap<String, Boolean>) {
-
         Row(
             Modifier
                 .background(color = Color(0xFFf7f6ff))

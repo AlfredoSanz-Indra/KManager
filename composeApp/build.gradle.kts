@@ -55,7 +55,7 @@ compose.desktop {
             includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "KManager"
-            packageVersion = "1.1.10"
+            packageVersion = "1.1.11"
         }
     }
 }

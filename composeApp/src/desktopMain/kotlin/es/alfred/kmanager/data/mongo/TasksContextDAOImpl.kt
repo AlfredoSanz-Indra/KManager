@@ -46,7 +46,7 @@ class TasksContextDAOImpl : TasksContextDAO {
             logger.error { "upsertTasksContextProject -> Error upserting contextProject current -> $me" }
             result = TasksContextResult("", false, mutableMapOf())
         }
-        logger.info { "upsertTasksContextProject ->  result: $result" }
+        logger.info { "upsertTasksContextProject ->  ${result.result}" }
         return result
     }
 
@@ -76,7 +76,7 @@ class TasksContextDAOImpl : TasksContextDAO {
             result = TasksContextResult("", false, mutableMapOf())
         }
 
-        logger.info { "getTasksContextCurrentProject -> result: $result" }
+        logger.info { "getTasksContextCurrentProject -> result: ${result.result}" }
         return result
     }
 }

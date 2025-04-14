@@ -75,6 +75,11 @@ object DateTimeUtils {
         return todayDateTime.toInstant(getLocalTimeZone()).toEpochMilliseconds()
     }
 
+    fun currentDateTime(): Long {
+        val today = getCurrentLocalDateTime()
+        return today.toInstant(getLocalTimeZone()).toEpochMilliseconds()
+    }
+
     fun currentDateFormatted(): String {
         val today = getCurrentLocalDate()
         val todayDateTime: LocalDateTime = today.atTime(8,0)

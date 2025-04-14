@@ -37,6 +37,12 @@ class TasksListSearch {
         if(uiState.generalError) {
             TaskComponentError.showRow(uiState.generalErrorText)
         }
+        if(uiState.searching) {
+            TaskComponentExecutinActionMessage.showRow("Searching")
+        }
+        if(uiState.deleting) {
+            TaskComponentExecutinActionMessage.showRow("Deleting Task")
+        }
     }
 
     @Composable
@@ -64,7 +70,6 @@ class TasksListSearch {
                     conf.defaultValue = uiState.currentProject!!
                 }
                 TasksComponentSelect.show(conf, onSelectChange = {
-                    logger.info { "details -> onValueChange: $it" }
                     viewModel.changeCurrentProject(it)
                 })
             }
@@ -122,7 +127,7 @@ class TasksListSearch {
             Spacer(Modifier.width(20.dp))
 
             TasksComponentButton.show("New",
-                Color(0xFFe51d2e),
+                Color(0xFF35682d),
                 110.dp,
                 onClick = {
                     onNavigate(Navigation.TASKVIEW_NEW)
