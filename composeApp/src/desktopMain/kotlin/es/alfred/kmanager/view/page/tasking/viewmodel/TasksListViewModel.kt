@@ -58,7 +58,7 @@ class TasksListViewModel: ViewModel(){
                 updateCurrentProject(TasksContext.getCurrentProject())
             }
         }
-logger.info { "uiState.value.lastFilterUsed: ${uiState.value.lastFilterUsed}" }
+
         if(uiState.value.lastFilterUsed != null) {
             doSearch(uiState.value.lastFilterUsed!!)
         }

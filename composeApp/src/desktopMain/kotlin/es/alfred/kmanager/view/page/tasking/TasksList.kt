@@ -24,7 +24,7 @@ class TasksList() {
     private val taskListCards: TasksListCards = TasksListCards()
 
     @Composable
-    fun createPage(onNavigate: (String) -> Unit,
+    fun createPage(onNavigate: (String, String) -> Unit,
                    flag: Boolean,
                    viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
 

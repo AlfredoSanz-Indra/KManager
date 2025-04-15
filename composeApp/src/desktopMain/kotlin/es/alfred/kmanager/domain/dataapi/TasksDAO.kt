@@ -16,5 +16,7 @@ interface TasksDAO {
 
     suspend fun getTasks(filter: MgFilterTask): TasksListResult
 
+    suspend fun getTask(id: String): TasksResult
+
     suspend fun deleteTask(taskID: String): SimpleResult
 }

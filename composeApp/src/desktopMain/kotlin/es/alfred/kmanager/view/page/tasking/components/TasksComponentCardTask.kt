@@ -25,7 +25,7 @@ import es.alfred.kmanager.view.page.tasking.viewmodel.TasksListViewModel
 object TasksComponentCardTask {
 
     @Composable
-    fun show(thetask: Task, onEdit: () -> Unit, onDelete: (String) -> Unit) {
+    fun show(thetask: Task, onEdit: () -> Unit, onDelete: () -> Unit) {
         OutlinedCard(
             modifier = Modifier
                 .padding(vertical = 3.dp)
@@ -133,7 +133,7 @@ object TasksComponentCardTask {
     @Composable
     private fun rowThree(thetask: Task,
                          onEdit: () -> Unit,
-                         onDelete: (String) -> Unit,
+                         onDelete: () -> Unit,
                          viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
         Row(
             Modifier
@@ -176,7 +176,7 @@ object TasksComponentCardTask {
                         100.dp,
                         Icons.Filled.DeleteForever,
                         onClick = {
-                            onDelete(thetask.id!!)
+                            onDelete()
                         })
                 }
             }

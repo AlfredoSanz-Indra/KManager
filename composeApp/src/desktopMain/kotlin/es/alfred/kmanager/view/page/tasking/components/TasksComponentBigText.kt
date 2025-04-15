@@ -44,6 +44,10 @@ object TasksComponentBigText {
         var selectedTextBefore by rememberSaveable { mutableStateOf("") }
         var scrollState = rememberScrollState()
 
+        if(textValue.text.isNullOrEmpty() && conf.initialText.isNotBlank()) {
+            textValue = TextFieldValue(conf.initialText, TextRange(3, 100))
+        }
+
         OutlinedTextField(
             value = textValue,
             modifier = Modifier

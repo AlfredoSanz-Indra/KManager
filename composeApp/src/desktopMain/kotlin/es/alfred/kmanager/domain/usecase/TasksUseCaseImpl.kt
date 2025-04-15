@@ -82,6 +82,21 @@ class TasksUseCaseImpl: TasksUseCase {
         return result
     }
 
+    override suspend fun getTask(id: String): TaskResult {
+        logger.info { "getTask -> id: $id" }
+        val result = TaskResult(false, null)
+
+        val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
+            return@async DataFactory.getTasksDAO().getTask(id)
+        }
+        val resp = defer.await()
+        if(resp.result && resp.data != null) {
+            result.task = mapToModel(resp.data!!)
+            result.result = true
+        }
+        return result
+    }
+
     private fun mapToEntity(task: Task): MngTask {
         val result = MngTask(
             null,

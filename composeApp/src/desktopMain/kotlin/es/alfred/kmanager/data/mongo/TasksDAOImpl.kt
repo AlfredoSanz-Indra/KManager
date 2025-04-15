@@ -72,6 +72,31 @@ class TasksDAOImpl: TasksDAO {
         return result
     }
 
+    override suspend fun getTask(id: String): TasksResult {
+        logger.info { "getTask -> id: $id" }
+        var result = TasksResult(false, null)
+
+        try {
+            val mongoClient = MongoConn.getClient()
+            val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
+            val collection = database.getCollection<Document>("tasks")
+
+            val filter = Filters.eq("_id", ObjectId(id))
+
+            collection.find<MngTask>(filter = filter).limit(1)
+                .collect {
+                    result.data = it
+                }
+            result.result = true
+        }
+        catch (me: MongoException) {
+            logger.error { "getTask -> Error getting tasks -> $me" }
+            result = TasksResult(false, null)
+        }
+        logger.info { "getTask -> result: ${result.result}" }
+        return result
+    }
+
     override suspend fun getTasks(filter: MgFilterTask): TasksListResult {
         logger.info { "getTasks -> filter: $filter" }
         var result = TasksListResult(true, listOf())

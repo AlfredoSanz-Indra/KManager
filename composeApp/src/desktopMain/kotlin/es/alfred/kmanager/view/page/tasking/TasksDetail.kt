@@ -13,10 +13,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentTitle
+import es.alfred.kmanager.view.page.tasking.model.TasksStateModeEnum
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailActionsRow
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailStatesRow
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailsForm
-import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
 import es.alfred.kmanager.view.shared.Navigation
 import mu.KotlinLogging
@@ -34,28 +34,25 @@ class TasksDetail {
 
     @Composable
     fun createPage(stateMode: TasksStateModeEnum,
+                   taskId: String,
                    onNavigate: (String) -> Unit,
                    flag: Boolean,
                    viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.STARTED)
-        val title = remember { mutableStateOf("No Task") }
         val isInitialized = remember { mutableStateOf(false) }
+
         if(flag != isInitialized.value) {
             viewModel.init()
+            viewModel.setStateMode(stateMode, taskId)
             uiState.saveAction = false
             isInitialized.value = flag
         }
 
-        if(title.value == "No Task") {
-            viewModel.setStateMode(stateMode)
-            title.value = uiState.title
-        }
         TasksComponentTitle.show(uiState.title)
         if(uiState.saveAction == true) {
             onNavigate(Navigation.TASKVIEW_LIST)
         }
-
         tasksDetailActionsRow.showSection(onNavigate)
         if(uiState.generalError) {
             Spacer(modifier = Modifier.width(20.dp))

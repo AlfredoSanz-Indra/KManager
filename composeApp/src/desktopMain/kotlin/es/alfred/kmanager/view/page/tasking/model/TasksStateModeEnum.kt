@@ -1,4 +1,4 @@
-package es.alfred.kmanager.view.page.tasking.sections
+package es.alfred.kmanager.view.page.tasking.model
 
 /**
  * @author Alfredo Sanz

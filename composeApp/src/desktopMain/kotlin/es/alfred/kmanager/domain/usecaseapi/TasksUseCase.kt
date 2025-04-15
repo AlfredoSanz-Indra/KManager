@@ -12,5 +12,7 @@ interface TasksUseCase {
 
     suspend fun getTasks(filterTasks: FilterTasks): TasksResult
 
+    suspend fun getTask(id: String): TaskResult
+
     suspend fun deleteTask(id: String): BooleanResult
 }

@@ -25,8 +25,9 @@ object TasksComponentChip {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun show(item: String, onSelectedChip: (String) -> Unit) {
+    fun show(item: String, forceSelected: Boolean, onSelectedChip: (String) -> Unit) {
         var selected by remember { mutableStateOf(false) }
+        if(forceSelected) selected = true
 
         FilterChip(
             selected = selected,
