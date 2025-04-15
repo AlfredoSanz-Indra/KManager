@@ -7,10 +7,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import es.alfred.kmanager.view.page.tasking.TasksDetail
 import es.alfred.kmanager.view.page.tasking.TasksList
-import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
+import es.alfred.kmanager.view.page.tasking.model.TasksStateModeEnum
 import es.alfred.kmanager.view.shared.KHeaderMenu
 import es.alfred.kmanager.view.shared.Navigation
-import mu.KotlinLogging
 
 /**
  * @author Alfredo Sanz
@@ -24,6 +23,7 @@ class TasksView() : IView {
     @Composable
     override fun createView(onChangeView: (String) -> Unit) {
         var showView: String by remember { mutableStateOf(Navigation.TASKVIEW_LIST) }
+        var taskId: String by remember { mutableStateOf("") }
 
         MaterialTheme(darkColorScheme(background = Color.Black)) {
             Column {
@@ -31,19 +31,23 @@ class TasksView() : IView {
 
                 when (showView) {
                     Navigation.TASKVIEW_NEW -> tasksDetail.createPage(TasksStateModeEnum.NEW_TASK,
+                                                                      "",
                                                                       onNavigate = {
                                                                           showView = it
+                                                                          taskId = ""
                                                                       },
                                                                      true)
 
                     Navigation.TASKVIEW_UPDATE -> tasksDetail.createPage(TasksStateModeEnum.UPDATE_TASK,
+                                                                         taskId,
                                                                          onNavigate = {
                                                                              showView = it
                                                                          },
                                                                          true)
 
-                    Navigation.TASKVIEW_LIST -> tasksList.createPage(onNavigate = {
-                                                                         showView = it
+                    Navigation.TASKVIEW_LIST -> tasksList.createPage(onNavigate =  {showV, id ->
+                                                                         showView = showV
+                                                                         taskId = id
                                                                      },
                                                                      true)
                 }

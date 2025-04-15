@@ -11,7 +11,7 @@ import es.alfred.kmanager.core.validators.ValidatorResult
 import es.alfred.kmanager.domain.model.SelectData
 import es.alfred.kmanager.domain.model.Task
 import es.alfred.kmanager.view.context.TasksContext
-import es.alfred.kmanager.view.page.tasking.sections.TasksStateModeEnum
+import es.alfred.kmanager.view.page.tasking.model.TasksStateModeEnum
 import es.alfred.kmanager.view.shared.ValidationResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +48,8 @@ data class TasksDetailUiState(
     var saveAction: Boolean = false,
     var showTaskDateReqDialog: Boolean = false,
     var showTaskDateEndDialog: Boolean = false,
+    var searching: Boolean = false,
+    var checkLoadedTask: Boolean = false
 )
 
 val taskShort_MAXLENGTH = 100
@@ -73,12 +75,11 @@ class TasksDetailViewModel: ViewModel(){
         }
     }
 
-    fun setStateMode(stateMode: TasksStateModeEnum) {
+    fun setStateMode(stateMode: TasksStateModeEnum, taskId: String?) {
         this.updateMode(stateMode.stateMode)
-
         when(stateMode) {
             TasksStateModeEnum.NEW_TASK -> creatingStateModeInit()
-            else -> updatingStateModeInit()
+            else -> updatingStateModeInit(taskId!!)
         }
     }
 
@@ -91,8 +92,9 @@ class TasksDetailViewModel: ViewModel(){
         updateTaskDateReq(DateTimeUtils.currentDate(), DateTimeUtils.currentDateFormatted())
     }
 
-    private fun updatingStateModeInit() {
-        updateTitle("Update Task")
+    private fun updatingStateModeInit(taskId: String) {
+        updateTitle("Edit Task")
+        getTask(taskId)
     }
 
     fun addTaskStateToSelectedList(taskState: String) {
@@ -261,6 +263,47 @@ class TasksDetailViewModel: ViewModel(){
         return result
     }
 
+    private fun getTask(taskId: String) {
+        logger.info { "getTask -> taskId: $taskId" }
+        val tasksUseCase = UseCaseFactory.getTasksUseCase()
+
+        updateSearching(true)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val resp = tasksUseCase.getTask(taskId)
+                if (resp.result) {
+                    mapToForm(resp.task!!)
+                    updateCheckLoadedTask(true)
+                }
+            }
+            catch (err: Error) {
+                updateGeneralError(true, "Error getting Task")
+                logger.info { "Error Getting: ${err.message}" }
+            }
+            finally {
+                updateSearching(false)
+            }
+        }
+    }
+
+    private fun mapToForm(task: Task) {
+        updateTaskName(task.name)
+        updateTaskJira(task.jira ?: "")
+        updateTaskDesc(task.description ?: "")
+        updateTaskBranches(task.branches ?: "")
+        updateTaskCommits(task.commits ?: "")
+        updateTaskNotes(task.notes ?: "")
+        if(task.dateReq != null) {
+            val dateFormatted = calcDateFormatted(task.dateReq!!)
+            updateTaskDateReq(task.dateReq!!, dateFormatted)
+        }
+        if(task.dateEnd != null) {
+            val dateFormatted = calcDateFormatted(task.dateEnd!!)
+            updateTaskDateEnd(task.dateEnd!!, dateFormatted)
+        }
+        _uiState.value.taskStateSelectedList.addAll(task.states)
+    }
+
     private fun updateTaskProjectList(projectList: List<SelectData>) {
         _uiState.update {
             it.copy(taskProjectList = projectList)
@@ -359,8 +402,22 @@ class TasksDetailViewModel: ViewModel(){
         }
     }
 
+    private fun updateSearching(action: Boolean) {
+        _uiState.update {
+            it.copy(searching = action)
+        }
+    }
+
+    fun updateCheckLoadedTask(value: Boolean) {
+        _uiState.update {
+            it.copy(checkLoadedTask = value)
+        }
+    }
+
     private fun clearState() {
         updateSaveAction(false)
+        updateSearching(false)
+        updateCheckLoadedTask(false)
         updateTitle("")
         _uiState.value.taskStateSelectedList.clear()
         updateCurrentProject(null)

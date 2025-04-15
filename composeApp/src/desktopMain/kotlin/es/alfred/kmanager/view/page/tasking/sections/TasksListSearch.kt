@@ -25,7 +25,7 @@ class TasksListSearch {
     private val logger = KotlinLogging.logger {}
 
     @Composable
-    fun showSection(onNavigate: (String) -> Unit,
+    fun showSection(onNavigate: (String, String) -> Unit,
                     viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -90,15 +90,16 @@ class TasksListSearch {
             Spacer(Modifier.width(25.dp))
             for(item in uiState.taskStateList) {
                 TasksComponentChip.show(item,
-                    onSelectedChip = {
-                        viewModel.addTaskStateToSearchList(it)
-                    })
+                                        false,
+                                        onSelectedChip = {
+                                            viewModel.addTaskStateToSearchList(it)
+                                        })
             }
         }
     }
 
     @Composable
-    private fun rowTextAndActions(onNavigate: (String) -> Unit,
+    private fun rowTextAndActions(onNavigate: (String, String) -> Unit,
                                   viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
         Row(
             Modifier
@@ -130,7 +131,7 @@ class TasksListSearch {
                 Color(0xFF35682d),
                 110.dp,
                 onClick = {
-                    onNavigate(Navigation.TASKVIEW_NEW)
+                    onNavigate(Navigation.TASKVIEW_NEW, "")
                 } )
         }//Row
     }

@@ -42,6 +42,10 @@ object TasksComponentText {
         var selectedText by rememberSaveable { mutableStateOf("") }
         var selectedTextBefore by rememberSaveable { mutableStateOf("") }
 
+        if(textValue.text.isNullOrEmpty() && conf.initialText.isNotBlank()) {
+            textValue = TextFieldValue(conf.initialText, TextRange(3, 100))
+        }
+
         OutlinedTextField(
             value = textValue,
             modifier = Modifier

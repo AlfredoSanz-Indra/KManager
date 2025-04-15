@@ -28,9 +28,9 @@ class TasksDetailsForm {
     fun showSection(viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val confName = ComponentsConfDataFactory.standardTextConf("", "Name")
+        val confName = ComponentsConfDataFactory.standardTextConf(uiState.taskName, "Name")
         confName.width = 0.45f
-        val confJira = ComponentsConfDataFactory.standardTextConf("", "Jira")
+        val confJira = ComponentsConfDataFactory.standardTextConf(uiState.taskJira, "Jira")
         confJira.width = 0.81f
         rowOfText2(confName,
                    confJira,
@@ -41,7 +41,7 @@ class TasksDetailsForm {
                        viewModel.updateTaskJira(it)
                    })
 
-        val confDesc = ComponentsConfDataFactory.standardBigTextConf("", "Description")
+        val confDesc = ComponentsConfDataFactory.standardBigTextConf(uiState.taskDesc, "Description")
         rowOfBigText(confDesc,
                      onValueChange = {
                         viewModel.updateTaskDesc(it)
@@ -60,7 +60,7 @@ class TasksDetailsForm {
                              viewModel.onDateEndSelected(it)
                          })
 
-        val confBranches = ComponentsConfDataFactory.standardBigTextConf("", "Branches")
+        val confBranches = ComponentsConfDataFactory.standardBigTextConf(uiState.taskBranches, "Branches")
         confBranches.minLines = 1
         confBranches.maxLines = 2
         rowOfBigText(confBranches,
@@ -68,7 +68,7 @@ class TasksDetailsForm {
                         viewModel.updateTaskBranches(it)
                      })
 
-        val confCommits = ComponentsConfDataFactory.standardBigTextConf("", "Commits")
+        val confCommits = ComponentsConfDataFactory.standardBigTextConf(uiState.taskCommits, "Commits")
         confBranches.minLines = 2
         confBranches.maxLines = 5
         rowOfBigText(confCommits,
@@ -76,7 +76,7 @@ class TasksDetailsForm {
                         viewModel.updateTaskCommits(it)
                      })
 
-        val confNotes = ComponentsConfDataFactory.standardBigTextConf("", "Notes")
+        val confNotes = ComponentsConfDataFactory.standardBigTextConf(uiState.taskNotes, "Notes")
         rowOfBigText(confNotes,
                      onValueChange = {
                         viewModel.updateTaskNotes(it)
@@ -115,7 +115,6 @@ class TasksDetailsForm {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(20.dp))
-
             TasksComponentText.show(confA,
                                     onValueChange = {
                                         onValueChangeA(it)

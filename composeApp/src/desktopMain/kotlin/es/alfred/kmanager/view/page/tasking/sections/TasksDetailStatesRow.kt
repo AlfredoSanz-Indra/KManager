@@ -36,9 +36,18 @@ class TasksDetailStatesRow {
             Spacer(Modifier.width(25.dp))
             for (item in uiState.taskStateList) {
                 TasksComponentChip.show(item,
-                                            onSelectedChip = {
-                                                viewModel.addTaskStateToSelectedList(it)
-                                            })
+                                        if(uiState.checkLoadedTask) {
+                                            uiState.taskStateSelectedList.contains(item)
+                                        }
+                                        else {
+                                            false
+                                        },
+                                        onSelectedChip = {
+                                                          viewModel.addTaskStateToSelectedList(it)
+                                                         })
+            }
+            if(uiState.checkLoadedTask) {
+                viewModel.updateCheckLoadedTask(false)
             }
         }
     }
