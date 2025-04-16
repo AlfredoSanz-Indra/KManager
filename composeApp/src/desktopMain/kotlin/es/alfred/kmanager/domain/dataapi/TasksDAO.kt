@@ -14,6 +14,8 @@ interface TasksDAO {
 
     suspend fun insertTask(task: MngTask): TasksResult
 
+    suspend fun updateTask(task: MngTask): SimpleResult
+
     suspend fun getTasks(filter: MgFilterTask): TasksListResult
 
     suspend fun getTask(id: String): TasksResult

@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import mu.KotlinLogging
+import org.bson.types.ObjectId
 
 /**
  * @author Alfredo Sanz
@@ -62,7 +63,19 @@ class TasksUseCaseImpl: TasksUseCase {
     }
 
     private suspend fun saveExistingTask(task: Task): TaskResult {
-        return TaskResult(false, null)
+        logger.info { "saveNewTask" }
+        var result = TaskResult(false, null)
+
+        val entity = mapToEntity(task)
+        entity._id = ObjectId(task.id)
+        val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
+            return@async DataFactory.getTasksDAO().updateTask(entity)
+        }
+        val resp = defer.await()
+        if(resp.result) {
+            result = TaskResult(true, task)
+        }
+        return result
     }
 
     override suspend fun getTasks(filterTasks: FilterTasks): TasksResult {

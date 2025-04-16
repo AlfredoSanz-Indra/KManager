@@ -49,7 +49,8 @@ data class TasksDetailUiState(
     var showTaskDateReqDialog: Boolean = false,
     var showTaskDateEndDialog: Boolean = false,
     var searching: Boolean = false,
-    var checkLoadedTask: Boolean = false
+    var checkLoadedTask: Boolean = false,
+    var editingTaskID: String? = null
 )
 
 val taskShort_MAXLENGTH = 100
@@ -89,12 +90,14 @@ class TasksDetailViewModel: ViewModel(){
 
     private fun creatingStateModeInit() {
         updateTitle("New Task")
+        updateEditingTaskID(null)
         updateTaskDateReq(DateTimeUtils.currentDate(), DateTimeUtils.currentDateFormatted())
     }
 
     private fun updatingStateModeInit(taskId: String) {
         updateTitle("Edit Task")
         getTask(taskId)
+        updateEditingTaskID(taskId)
     }
 
     fun addTaskStateToSelectedList(taskState: String) {
@@ -142,9 +145,13 @@ class TasksDetailViewModel: ViewModel(){
 
         val task: Task = createTaskObj()
         CoroutineScope(Dispatchers.IO).launch {
+            if(uiState.value.mode == TasksStateModeEnum.UPDATE_TASK.stateMode ) {
+                task.id = uiState.value.editingTaskID
+            }
             val result = tasksUseCase.saveTask(task)
             updateSaveAction(true)
-            logger.info { "save -> result: $result" }
+            updateEditingTaskID(null)
+            logger.info { "save -> result: ${result.result}" }
         }
 
     }
@@ -414,8 +421,15 @@ class TasksDetailViewModel: ViewModel(){
         }
     }
 
+    private fun updateEditingTaskID(id: String?) {
+        _uiState.update {
+            it.copy(editingTaskID = id)
+        }
+    }
+
     private fun clearState() {
         updateSaveAction(false)
+        updateEditingTaskID(null)
         updateSearching(false)
         updateCheckLoadedTask(false)
         updateTitle("")
