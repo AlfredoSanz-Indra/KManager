@@ -8,8 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
+import es.alfred.kmanager.view.page.tasking.components.TaskComponentExecutinActionMessage
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentButton
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentSelect
 import es.alfred.kmanager.view.page.tasking.viewmodel.TasksDetailViewModel
@@ -28,7 +31,22 @@ class TasksDetailActionsRow {
     @Composable
     fun showSection(onNavigate: (String) -> Unit,
                     viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.STARTED)
 
+        mainRow(onNavigate)
+
+        if(uiState.generalError) {
+            Spacer(modifier = Modifier.width(20.dp))
+            TaskComponentError.showRow(uiState.generalErrorText)
+        }
+        if(uiState.saving) {
+            Spacer(modifier = Modifier.width(20.dp))
+            TaskComponentExecutinActionMessage.showRow("Saving Task")
+        }
+    }
+
+    @Composable
+    private fun mainRow(onNavigate: (String) -> Unit, viewModel: TasksDetailViewModel = viewModel { TasksDetailViewModel() }) {
         Row(
             Modifier
                 .background(color = Color(0xFFf7f6ff))
@@ -42,22 +60,23 @@ class TasksDetailActionsRow {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                projectListRow(viewModel)//Row
+                projectListSection(viewModel)//Row
             }
 
             Column(
                 Modifier
                     .fillMaxWidth(0.8f),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start)
+                horizontalAlignment = Alignment.Start
+            )
             {
-                buttonsRow(viewModel, onNavigate)//Row
+                buttonsSection(viewModel, onNavigate)//Row
             }
-        }//Row
+        }
     }
 
     @Composable
-    private fun projectListRow(viewModel: TasksDetailViewModel) {
+    private fun projectListSection(viewModel: TasksDetailViewModel) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         Row(
@@ -84,7 +103,7 @@ class TasksDetailActionsRow {
     }
 
     @Composable
-    private fun buttonsRow(viewModel: TasksDetailViewModel, onNavigate: (String) -> Unit) {
+    private fun buttonsSection(viewModel: TasksDetailViewModel, onNavigate: (String) -> Unit) {
         Row(
             Modifier
                 .background(color = Color(0xFFf7f6ff))

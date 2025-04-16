@@ -20,7 +20,7 @@ class TasksUseCaseImpl: TasksUseCase {
 
     override suspend fun deleteTask(id: String): BooleanResult {
         logger.info { "deleteTask -> id: $id" }
-        var result = BooleanResult(false)
+        var result = BooleanResult(false, null)
 
         if(!id.isNullOrBlank()) {
             val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
@@ -28,7 +28,10 @@ class TasksUseCaseImpl: TasksUseCase {
             }
             val resp = defer.await()
             if(resp.result) {
-                result = BooleanResult(true)
+                result = BooleanResult(true, null)
+            }
+            else {
+                result.errorMsg = resp.errorMsg
             }
         }
         return result
@@ -48,7 +51,7 @@ class TasksUseCaseImpl: TasksUseCase {
 
     private suspend fun saveNewTask(task: Task): TaskResult {
         logger.info { "saveNewTask" }
-        var result = TaskResult(false, null)
+        var result = TaskResult(false, null, null)
 
         val entity = mapToEntity(task)
         val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
@@ -57,14 +60,17 @@ class TasksUseCaseImpl: TasksUseCase {
         val resp = defer.await()
         if(resp.result) {
             val newtask = mapToModel(resp.data!!)
-            result = TaskResult(true, newtask)
+            result = TaskResult(true, newtask, null)
+        }
+        else {
+            result.errorMsg = resp.errorMsg
         }
         return result
     }
 
     private suspend fun saveExistingTask(task: Task): TaskResult {
         logger.info { "saveNewTask" }
-        var result = TaskResult(false, null)
+        var result = TaskResult(false, null, null)
 
         val entity = mapToEntity(task)
         entity._id = ObjectId(task.id)
@@ -73,31 +79,38 @@ class TasksUseCaseImpl: TasksUseCase {
         }
         val resp = defer.await()
         if(resp.result) {
-            result = TaskResult(true, task)
+            result = TaskResult(true, task, null)
+        }
+        else {
+            result.errorMsg = resp.errorMsg
         }
         return result
     }
 
     override suspend fun getTasks(filterTasks: FilterTasks): TasksResult {
         logger.info { "getTasks -> filterTasks: $filterTasks" }
-        val result = TasksResult(true, listOf())
+        val result = TasksResult(false, listOf(), null)
         val filter = mapToFilter(filterTasks)
 
         val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
             return@async DataFactory.getTasksDAO().getTasks(filter)
         }
         val resp = defer.await()
-        result.result = resp.result
         if(resp.result) {
             val resultList = resp.data.map { mapToModel(it)}
             result.tasks = resultList
+            result.result = true
         }
+        else {
+            result.errorMsg = resp.errorMsg
+        }
+        logger.info { "getTasks -> result: $result" }
         return result
     }
 
     override suspend fun getTask(id: String): TaskResult {
         logger.info { "getTask -> id: $id" }
-        val result = TaskResult(false, null)
+        val result = TaskResult(false, null, null)
 
         val defer = CoroutineScope(Dispatchers.IO).async(Dispatchers.IO) {
             return@async DataFactory.getTasksDAO().getTask(id)
@@ -106,6 +119,9 @@ class TasksUseCaseImpl: TasksUseCase {
         if(resp.result && resp.data != null) {
             result.task = mapToModel(resp.data!!)
             result.result = true
+        }
+        else {
+            result.errorMsg = resp.errorMsg
         }
         return result
     }

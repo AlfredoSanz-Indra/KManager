@@ -22,7 +22,7 @@ class BranchesDAOImpl : BranchesDAO {
 
     override suspend fun addBranch(project: String, branchList: List<String>): InsertResult {
         logger.info { "addBranch -> project: $project , branchList: $branchList " }
-        var result = InsertResult("", true)
+        var result = InsertResult("", true, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -38,7 +38,7 @@ class BranchesDAOImpl : BranchesDAO {
         }
         catch (me: Exception) {
             logger.error { "Error inserting branches -> $me" }
-            result = InsertResult("", false)
+            result = InsertResult("", false, me.message)
         }
         logger.info { "addBranch ->  result: ${result.result}" }
         return result
@@ -46,7 +46,7 @@ class BranchesDAOImpl : BranchesDAO {
 
     override suspend fun updateBranches(project: String, branchList: List<String>): InsertResult {
         logger.info { "updateBranches -> project: $project , branchList: $branchList " }
-        var result = InsertResult("", true)
+        var result = InsertResult("", true, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -62,7 +62,7 @@ class BranchesDAOImpl : BranchesDAO {
         }
         catch (me: Exception) {
             logger.error { "Error updating branches -> $me" }
-            result = InsertResult("", false)
+            result = InsertResult("", false, me.message)
         }
         logger.info { "updateBranches ->  result: ${result.result}" }
         return result
@@ -70,7 +70,7 @@ class BranchesDAOImpl : BranchesDAO {
 
     override suspend fun getBranches(project: String): BranchesResult {
         logger.info { "getBranches -> project: $project" }
-        val result = BranchesResult(mutableListOf(), true)
+        var result = BranchesResult(mutableListOf(), true, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -87,7 +87,7 @@ class BranchesDAOImpl : BranchesDAO {
         }
         catch (me: Exception) {
             logger.error { "Error requesting branches from Mongo -> $me" }
-            result.result = false
+            result = BranchesResult( listOf(), false, me.message)
         }
         logger.info { "getBranches ->  result: ${result.result}" }
         return result

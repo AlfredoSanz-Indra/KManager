@@ -1,6 +1,5 @@
 package es.alfred.kmanager.data.mongo
 
-import com.mongodb.MongoException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Sorts
 import es.alfred.kmanager.core.db.mongo.MongoConn
@@ -25,7 +24,7 @@ class TasksDAOImpl: TasksDAO {
 
     override suspend fun deleteTask(taskID: String): SimpleResult {
         logger.info { "deleteTask -> taskID: $taskID" }
-        var result = SimpleResult(false)
+        var result = SimpleResult(false, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -36,13 +35,13 @@ class TasksDAOImpl: TasksDAO {
 
             collection.deleteOne(filter).also {
                 if(it.deletedCount > 0) {
-                    result = SimpleResult(true)
+                    result = SimpleResult(true, null)
                 }
             }
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "deleteTask -> Error deleting task -> $me" }
-            result = SimpleResult(false)
+            result = SimpleResult(false, me.localizedMessage)
         }
         logger.info { "deleteTask ->  ${result.result}" }
         return result
@@ -50,7 +49,7 @@ class TasksDAOImpl: TasksDAO {
 
     override suspend fun insertTask(task: MngTask): TasksResult {
         logger.info { "insertTask -> task: $task" }
-        var result = TasksResult(false, null)
+        var result = TasksResult(false, null, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -60,13 +59,13 @@ class TasksDAOImpl: TasksDAO {
             collection.insertOne(task).also {
                 if(it.insertedId != null) {
                     task._id = it.insertedId?.asObjectId()?.value
-                    result = TasksResult(true, task)
+                    result = TasksResult(true, task, null)
                 }
             }
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "insertTask -> Error inserting Task -> $me" }
-            result = TasksResult(false, null)
+            result = TasksResult(false, null, me.localizedMessage)
         }
         logger.info { "insertTask ->  ${result.result}" }
         return result
@@ -74,7 +73,7 @@ class TasksDAOImpl: TasksDAO {
 
     override suspend fun updateTask(task: MngTask): SimpleResult {
         logger.info { "updateTask -> task: $task" }
-        var result = SimpleResult(false)
+        var result = SimpleResult(false, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -86,23 +85,21 @@ class TasksDAOImpl: TasksDAO {
             collection.replaceOne(filter, task).also {
                 if(it.modifiedCount > 0) {
                     logger.info { "updateTask -> modifiedCount: ${it.modifiedCount}" }
-                    result = SimpleResult(true)
+                    result = SimpleResult(true, null)
                 }
             }
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "updateTask -> Error updating Task -> $me" }
-            result = SimpleResult(false)
+            result = SimpleResult(false, me.localizedMessage)
         }
         logger.info { "updateTask ->  ${result.result}" }
         return result
-
-
     }
 
     override suspend fun getTask(id: String): TasksResult {
         logger.info { "getTask -> id: $id" }
-        var result = TasksResult(false, null)
+        var result = TasksResult(false, null, null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -117,9 +114,9 @@ class TasksDAOImpl: TasksDAO {
                 }
             result.result = true
         }
-        catch (me: MongoException) {
+        catch (me: Exception) {
             logger.error { "getTask -> Error getting tasks -> $me" }
-            result = TasksResult(false, null)
+            result = TasksResult(false, null, me.localizedMessage)
         }
         logger.info { "getTask -> result: ${result.result}" }
         return result
@@ -127,7 +124,7 @@ class TasksDAOImpl: TasksDAO {
 
     override suspend fun getTasks(filter: MgFilterTask): TasksListResult {
         logger.info { "getTasks -> filter: $filter" }
-        var result = TasksListResult(true, listOf())
+        var result = TasksListResult(true, listOf(), null)
 
         try {
             val mongoClient = MongoConn.getClient()
@@ -154,9 +151,9 @@ class TasksDAOImpl: TasksDAO {
                       }
             result.data = resultList.toList()
         }
-        catch (me: MongoException) {
-            logger.error { "getTasks -> Error getting tasks -> $me" }
-            result = TasksListResult(false, listOf())
+        catch (me: Exception) {
+            logger.error { "getTask -> Error getting tasks -> $me" }
+            result = TasksListResult(false, listOf(), me.localizedMessage)
         }
         logger.info { "getTasks -> result: ${result.result}" }
         return result

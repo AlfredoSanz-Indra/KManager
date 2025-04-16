@@ -21,11 +21,11 @@ class OperationsUseCaseImpl : OperationsUseCase {
 
         try {
             val resp: ServerAlive = this.mongoDAO.checkServerIsAlive()
-            result = BooleanResult(resp.isalive)
+            result = BooleanResult(resp.isalive, null)
         }
         catch (err: Exception) {
             logger.error { "Error in OperationsUseCase - isAlive -> $err" }
-            result = BooleanResult(false)
+            result = BooleanResult(false, err.message)
         }
 
         return result
@@ -33,7 +33,7 @@ class OperationsUseCaseImpl : OperationsUseCase {
 
     override suspend fun addBranch(project: String, branchName: String): ListResult {
         logger.info { "addBranch -> project: $project, branchName: $branchName" }
-        val result = ListResult(listOf(), false)
+        val result = ListResult(listOf(), false, null)
 
         try {
             val branchesResult = this.branchesDAO.getBranches(project)
@@ -67,11 +67,15 @@ class OperationsUseCaseImpl : OperationsUseCase {
                     result.data = branches
                     result.result = true
                 }
+                else {
+                    result.errorMsg = resp.errorMsg
+                }
             }
         }
         catch (err: Exception) {
             logger.error { "Error in OperationsUseCase - addBranch -> $err" }
             result.result = false
+            result.errorMsg = err.message
         }
 
         return result
@@ -79,18 +83,22 @@ class OperationsUseCaseImpl : OperationsUseCase {
 
     override suspend fun getBranches(project: String): ListResult {
         logger.info { "getBranches -> project: $project" }
-        val result = ListResult(listOf(), true)
+        val result = ListResult(listOf(), true, null)
 
         try {
-            val branchesResult = this.branchesDAO.getBranches(project)
+            val resp = this.branchesDAO.getBranches(project)
 
-            if(branchesResult.result && branchesResult.branches.isNotEmpty()) {
-                result.data = branchesResult.branches
+            if(resp.result && resp.branches.isNotEmpty()) {
+                result.data = resp.branches
+            }
+            if(!resp.result) {
+                result.errorMsg = resp.errorMsg
             }
         }
         catch (err: Exception) {
             logger.error { "Error in OperationsUseCase - getBranches -> $err" }
             result.result = false
+            result.errorMsg = err.message
         }
 
         return result

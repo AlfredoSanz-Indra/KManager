@@ -49,13 +49,13 @@ data class TasksDetailUiState(
     var showTaskDateReqDialog: Boolean = false,
     var showTaskDateEndDialog: Boolean = false,
     var searching: Boolean = false,
+    var saving: Boolean = false,
     var checkLoadedTask: Boolean = false,
     var editingTaskID: String? = null
 )
 
 val taskShort_MAXLENGTH = 100
 val taskLong_MAXLENGTH = 1000
-
 
 class TasksDetailViewModel: ViewModel(){
     private val logger = KotlinLogging.logger {}
@@ -143,17 +143,22 @@ class TasksDetailViewModel: ViewModel(){
             return
         }
 
+        updateSaving(true)
         val task: Task = createTaskObj()
         CoroutineScope(Dispatchers.IO).launch {
             if(uiState.value.mode == TasksStateModeEnum.UPDATE_TASK.stateMode ) {
                 task.id = uiState.value.editingTaskID
             }
             val result = tasksUseCase.saveTask(task)
-            updateSaveAction(true)
-            updateEditingTaskID(null)
-            logger.info { "save -> result: ${result.result}" }
+            updateSaving(false)
+            if(result.result) {
+                updateSaveAction(true)
+                updateEditingTaskID(null)
+            }
+            else {
+                updateGeneralError(true, result.errorMsg!!)
+            }
         }
-
     }
 
     private fun createTaskObj(): Task {
@@ -415,6 +420,12 @@ class TasksDetailViewModel: ViewModel(){
         }
     }
 
+    private fun updateSaving(action: Boolean) {
+        _uiState.update {
+            it.copy(saving = action)
+        }
+    }
+
     fun updateCheckLoadedTask(value: Boolean) {
         _uiState.update {
             it.copy(checkLoadedTask = value)
@@ -431,6 +442,7 @@ class TasksDetailViewModel: ViewModel(){
         updateSaveAction(false)
         updateEditingTaskID(null)
         updateSearching(false)
+        updateSaving(false)
         updateCheckLoadedTask(false)
         updateTitle("")
         _uiState.value.taskStateSelectedList.clear()
