@@ -1,17 +1,12 @@
 package es.alfred.kmanager.view.page.tasking
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import es.alfred.kmanager.view.page.tasking.components.TaskComponentError
 import es.alfred.kmanager.view.page.tasking.components.TasksComponentTitle
 import es.alfred.kmanager.view.page.tasking.model.TasksStateModeEnum
 import es.alfred.kmanager.view.page.tasking.sections.TasksDetailActionsRow
@@ -54,10 +49,6 @@ class TasksDetail {
             onNavigate(Navigation.TASKVIEW_LIST)
         }
         tasksDetailActionsRow.showSection(onNavigate)
-        if(uiState.generalError) {
-            Spacer(modifier = Modifier.width(20.dp))
-            TaskComponentError.showRow(uiState.generalErrorText)
-        }
         tasksDetailStatesRow.showSection()
         tasksDetailsForm.showSection()
     }

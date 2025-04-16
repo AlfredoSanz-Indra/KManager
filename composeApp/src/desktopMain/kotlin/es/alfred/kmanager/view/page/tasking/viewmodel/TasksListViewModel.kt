@@ -107,12 +107,13 @@ class TasksListViewModel: ViewModel(){
         updateLastFilterUsed(filter)
         CoroutineScope(Dispatchers.IO).launch {
             val resp = tasksUseCase.getTasks(filter)
-            updateSearching(false)
             if (resp.result) {
                 updateTasksList(resp.tasks)
             } else {
                 updateTasksList(listOf())
+                updateGeneralError(true,"Error searching: ${resp.errorMsg}")
             }
+            updateSearching(false)
         }
     }
 
@@ -169,11 +170,15 @@ class TasksListViewModel: ViewModel(){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val resp = tasksUseCase.deleteTask(uiState.value.taskIDtoDelete)
+
                 updateDeleting(false)
-                updateSearching(true)
                 if (resp.result && uiState.value.lastFilterUsed != null) {
-                    doSearch(uiState.value.lastFilterUsed!!)
+                    updateSearching(true)
                     updateTaskIDtoDelete("")
+                    doSearch(uiState.value.lastFilterUsed!!)
+                }
+                if(!resp.result) {
+                    updateGeneralError(true, resp.errorMsg!!)
                 }
             }
             catch (err: Error) {

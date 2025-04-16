@@ -27,7 +27,6 @@ class TasksListSearch {
     @Composable
     fun showSection(onNavigate: (String, String) -> Unit,
                     viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
-
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         rowProjects()
