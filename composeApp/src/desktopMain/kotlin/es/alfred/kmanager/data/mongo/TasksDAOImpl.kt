@@ -65,11 +65,39 @@ class TasksDAOImpl: TasksDAO {
             }
         }
         catch (me: MongoException) {
-            logger.error { "insertTask -> Error inserting contextProject current -> $me" }
+            logger.error { "insertTask -> Error inserting Task -> $me" }
             result = TasksResult(false, null)
         }
         logger.info { "insertTask ->  ${result.result}" }
         return result
+    }
+
+    override suspend fun updateTask(task: MngTask): SimpleResult {
+        logger.info { "updateTask -> task: $task" }
+        var result = SimpleResult(false)
+
+        try {
+            val mongoClient = MongoConn.getClient()
+            val database = mongoClient.getDatabase(TheResources.getResources().mongo.database)
+            val collection = database.getCollection<MngTask>("tasks")
+
+            val filter = Filters.eq("_id", task._id)
+
+            collection.replaceOne(filter, task).also {
+                if(it.modifiedCount > 0) {
+                    logger.info { "updateTask -> modifiedCount: ${it.modifiedCount}" }
+                    result = SimpleResult(true)
+                }
+            }
+        }
+        catch (me: MongoException) {
+            logger.error { "updateTask -> Error updating Task -> $me" }
+            result = SimpleResult(false)
+        }
+        logger.info { "updateTask ->  ${result.result}" }
+        return result
+
+
     }
 
     override suspend fun getTask(id: String): TasksResult {
