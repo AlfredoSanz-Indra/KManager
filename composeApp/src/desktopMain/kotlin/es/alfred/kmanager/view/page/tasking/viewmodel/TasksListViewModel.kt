@@ -1,5 +1,6 @@
 package es.alfred.kmanager.view.page.tasking.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import es.alfred.kmanager.core.di.UseCaseFactory
 import es.alfred.kmanager.core.resources.TheResources
@@ -27,7 +28,7 @@ import mu.KotlinLogging
  */
 data class TasksListUiState(
     val taskStateList: List<String> = listOf("Pending", "Working", "Stopped", "Waiting", "Pushed", "Closed"),
-    val taskStateSearchList: MutableList<String> = mutableListOf(),
+    val taskStateSearchList: MutableList<String> = mutableStateListOf(),
     val taskProjectList: List<SelectData> = mutableListOf(),
     var taskFieldSearch: String = "",
     var currentProject: SelectData? = null,
@@ -56,12 +57,26 @@ class TasksListViewModel: ViewModel(){
         if(uiState.value.currentProject == null) {
             CoroutineScope(Dispatchers.IO).launch {
                 updateCurrentProject(TasksContext.getCurrentProject())
+                val filter =
+                    if(uiState.value.lastFilterUsed == null) {
+                        _uiState.value.taskStateSearchList.addLast("Working")
+                        FilterTasks(
+                            uiState.value.taskFieldSearch,
+                            uiState.value.currentProject!!.name,
+                            listOf("Working")
+                        )
+                    }
+                    else {
+                        uiState.value.lastFilterUsed!!
+                    }
+                doSearch(filter)
             }
         }
-
-        if(uiState.value.lastFilterUsed != null) {
+        else {
+            _uiState.value.taskStateSearchList.addAll(uiState.value.lastFilterUsed!!.states)
             doSearch(uiState.value.lastFilterUsed!!)
         }
+
     }
 
     fun changeCurrentProject(project: SelectData) {

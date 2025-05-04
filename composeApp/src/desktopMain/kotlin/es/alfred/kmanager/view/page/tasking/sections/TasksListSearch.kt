@@ -89,7 +89,7 @@ class TasksListSearch {
             Spacer(Modifier.width(25.dp))
             for(item in uiState.taskStateList) {
                 TasksComponentChip.show(item,
-                                        false,
+                          uiState.taskStateSearchList.contains(item),
                                         onSelectedChip = {
                                             viewModel.addTaskStateToSearchList(it)
                                         })
