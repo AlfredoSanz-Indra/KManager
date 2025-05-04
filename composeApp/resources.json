@@ -1,0 +1,38 @@
+{
+  "projects": [
+    {
+      "name": "crisis-backoffice-webapp-angular",
+      "label": "Crisis-backoffice",
+      "task": "crisis-backoffice",
+      "runnable": true
+    },
+	{
+      "name": "valija-interdoc-backoffice-webapp-angular",
+      "label": "Valija-interdoc",
+      "task": "valija-interdoc",
+      "runnable": true
+    },
+	{
+      "name": "valija-fisica-backoffice-webapp-angular",
+      "label": "Valija-fisica",
+      "task": "valija-fisica",
+      "runnable": true
+    },
+    {
+      "name": "KManagerDB",
+      "label": "KManagerDB",
+      "task": "KManagerDB",
+      "runnable": false
+    },
+    {
+      "name": "MyPlanningBook",
+      "label": "MyPlanningBook",
+      "task": "MyPlanningBook",
+      "runnable": false
+    }	
+  ],
+  "mongo": {
+    "connection": "mongodb://localhost:27017",
+    "database": "kmanagerDB"
+  }
+}
