@@ -41,6 +41,7 @@ data class TasksDetailUiState(
     var taskDateReqFormatted: String = "",
     var taskDateEnd: Long = 0L,
     var taskDateEndFormatted: String = "",
+    var taskCreationDate: Long = 0L,
     var generalError: Boolean = false,
     var generalErrorText: String = "",
     val title: String = "No Task",
@@ -145,6 +146,7 @@ class TasksDetailViewModel: ViewModel(){
 
         updateSaving(true)
         val task: Task = createTaskObj()
+        logger.info { "save -> creationDate: ${task.creationDate}" }
         CoroutineScope(Dispatchers.IO).launch {
             if(uiState.value.mode == TasksStateModeEnum.UPDATE_TASK.stateMode ) {
                 task.id = uiState.value.editingTaskID
@@ -180,7 +182,7 @@ class TasksDetailViewModel: ViewModel(){
             if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToYear(uiState.value.taskDateEnd) else null,
             if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToMonth(uiState.value.taskDateEnd) else null,
             if(uiState.value.taskDateEnd != 0L) DateTimeUtils.dateToDay(uiState.value.taskDateEnd) else null,
-            DateTimeUtils.currentDateTime()
+            if(uiState.value.taskCreationDate != 0L) uiState.value.taskCreationDate else DateTimeUtils.currentDateTime(),
         )
 
         return result
@@ -285,6 +287,7 @@ class TasksDetailViewModel: ViewModel(){
                 val resp = tasksUseCase.getTask(taskId)
                 if (resp.result) {
                     mapToForm(resp.task!!)
+                    logger.info { "getTask -> task.creationDate: ${uiState.value.taskCreationDate}" }
                     updateCheckLoadedTask(true)
                 }
             }
@@ -314,6 +317,7 @@ class TasksDetailViewModel: ViewModel(){
             updateTaskDateEnd(task.dateEnd!!, dateFormatted)
         }
         _uiState.value.taskStateSelectedList.addAll(task.states)
+        _uiState.value.taskCreationDate = task.creationDate
     }
 
     private fun updateTaskProjectList(projectList: List<SelectData>) {
