@@ -24,7 +24,7 @@ class FrontalesPageGitChipsRow {
 
     @Composable
     fun showRow(chipsSelected: MutableMap<String, Boolean>, onChipSelected: (Boolean) -> Unit) {
-        val items: List<Any> = TheResources.getResources().projects
+        val items: List<Any> = TheResources.getResources().projects.filter{ it -> it.runnable }
         val itemsGroup: List<List<Any>> = Util.groupItems(items, 4)
 
         for(group in itemsGroup) {
