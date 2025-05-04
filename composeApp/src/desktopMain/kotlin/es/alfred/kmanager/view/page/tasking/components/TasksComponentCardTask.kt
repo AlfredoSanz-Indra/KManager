@@ -30,11 +30,19 @@ object TasksComponentCardTask {
             modifier = Modifier
                 .padding(vertical = 3.dp)
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(125.dp)
                 .waterfallPadding(),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.outlinedCardColors(
-                containerColor = Color(0xFF2a4481),
+                containerColor = if(thetask.states.contains("Closed")) {
+                                     Color(0xFFcccccc)
+                                 }
+                                 else if(thetask.states.contains("Pushed")) {
+                                    Color(0xFF8387c2)
+                                }
+                                 else {
+                                     Color(0xFF2a4481)
+                                 },
                 contentColor = Color.Black,
                 disabledContainerColor = Color.Blue,
                 disabledContentColor = Color.Black
@@ -55,7 +63,9 @@ object TasksComponentCardTask {
                 Spacer(modifier = Modifier.height(5.dp))
                 rowTwo(thetask)
                 Spacer(modifier = Modifier.height(5.dp))
-                rowThree(thetask, onEdit, onDelete)
+                rowThree(thetask)
+                Spacer(modifier = Modifier.height(5.dp))
+                rowFour(thetask, onEdit, onDelete)
             } //Column
         } //card
     }
@@ -104,24 +114,12 @@ object TasksComponentCardTask {
         ) {
             Column(modifier = Modifier
                                 .padding(horizontal = 0.dp)
-                                .fillMaxWidth(0.7f),
+                                .fillMaxWidth(1f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.Start) {
 
                 Text(
-                    text = thetask.branches ?: "No branches declared",
-                    style = TextStyle(
-                        color = Color.White
-                    ),
-                )
-            }
-
-            Column(modifier = Modifier
-                                 .fillMaxWidth(1f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = thetask.jira ?: "No Jira declared",
+                    text = thetask.branches ?: "**branch**",
                     style = TextStyle(
                         color = Color.White
                     ),
@@ -131,10 +129,31 @@ object TasksComponentCardTask {
     }
 
     @Composable
-    private fun rowThree(thetask: Task,
-                         onEdit: () -> Unit,
-                         onDelete: () -> Unit,
-                         viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
+    private fun rowThree(thetask: Task) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal= 20.dp, vertical = 2.dp),
+        ) {
+            Column(modifier = Modifier
+                .fillMaxWidth(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start) {
+                Text(
+                    text = thetask.jira ?: "**jira**",
+                    style = TextStyle(
+                        color = Color.White
+                    ),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun rowFour(thetask: Task,
+                        onEdit: () -> Unit,
+                        onDelete: () -> Unit,
+                        viewModel: TasksListViewModel = viewModel { TasksListViewModel() }) {
         Row(
             Modifier
                 .fillMaxWidth(1f)
@@ -143,7 +162,7 @@ object TasksComponentCardTask {
             Column(modifier = Modifier
                                 .padding(horizontal = 0.dp)
                                 .fillMaxWidth(0.6f),
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.Start) {
                 Text(
                     text = viewModel.taskDateToString(thetask),
